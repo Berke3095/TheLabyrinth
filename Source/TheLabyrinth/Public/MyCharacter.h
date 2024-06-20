@@ -6,6 +6,10 @@
 
 class APlayerController;
 
+class UCapsuleComponent;
+class USkeletalMeshComponent;
+class UCameraComponent;
+
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -34,12 +38,32 @@ private:
 	void GetReferences();
 
 	/*
+		COMPONENTS
+	*/
+	UCapsuleComponent* CapsuleComponent{};
+
+	USkeletalMeshComponent* FPSMeshComponent{};
+	UPROPERTY(EditDefaultsOnly);
+	USkeletalMeshComponent* ReplicatedMeshComponent{};
+
+	UPROPERTY(EditDefaultsOnly)
+	UCameraComponent* Camera{};
+	void SetDefaults();
+
+	/*
 		INPUT
 	*/
+	void SetupEnhancedInput();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputMappingContext* CharacterMappingContext{};
 
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* MoveAction{};
 	void Move(const FInputActionValue& InputValue1);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UInputAction* LookAction{};
+	void Look(const FInputActionValue& InputValue1);
+	void UseControllerYaw(float Deltatime1);
 };
