@@ -46,7 +46,7 @@ private:
 	UPROPERTY(EditDefaultsOnly);
 	USkeletalMeshComponent* ReplicatedMeshComponent{};
 	UPROPERTY(EditDefaultsOnly);
-	USkeletalMeshComponent* FullBodyMeshComponent{};
+	USkeletalMeshComponent* ShadowMeshComponent{};
 	UPROPERTY(EditDefaultsOnly);
 	USkeletalMeshComponent* LegsMeshComponent{};
 	void SetMeshes();

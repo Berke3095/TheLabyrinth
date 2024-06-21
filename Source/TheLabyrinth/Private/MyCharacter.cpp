@@ -68,14 +68,15 @@ void AMyCharacter::SetMeshes()
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - ReplicatedMeshComponent is null.")) }
 
-	FullBodyMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FullBodyMeshComponent"));
-	if (FullBodyMeshComponent)
+	ShadowMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ShadowMeshComponent"));
+	if (ShadowMeshComponent)
 	{
-		FullBodyMeshComponent->SetOnlyOwnerSee(true);
-		FullBodyMeshComponent->SetupAttachment(RootComponent);
-		FullBodyMeshComponent->CastShadow = true;
+		ShadowMeshComponent->SetOnlyOwnerSee(true);
+		ShadowMeshComponent->bRenderInMainPass = false;
+		ShadowMeshComponent->SetupAttachment(RootComponent);
+		ShadowMeshComponent->CastShadow = true;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - FullBodyMeshComponent is null.")) }
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - ShadowMeshComponent is null.")) }
 
 	LegsMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LegsMeshComponent"));
 	if (LegsMeshComponent)
@@ -94,7 +95,7 @@ void AMyCharacter::SetDefaults()
 	SetMeshes();
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
-	if (Camera) { Camera->SetupAttachment(RootComponent); }
+	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 70.0f; }
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")) }
 
 	bUseControllerRotationYaw = false;
