@@ -48,10 +48,8 @@ void AMyCharacter::GetReferences()
 	PlayerController = Cast<APlayerController>(GetController());
 }
 
-void AMyCharacter::SetDefaults()
+void AMyCharacter::SetMeshes()
 {
-	CapsuleComponent = GetCapsuleComponent();
-
 	FPSMeshComponent = GetMesh();
 	if (FPSMeshComponent)
 	{
@@ -59,7 +57,7 @@ void AMyCharacter::SetDefaults()
 		FPSMeshComponent->SetupAttachment(RootComponent);
 		FPSMeshComponent->CastShadow = false;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - FPSMeshComponent is null.")) }
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - FPSMeshComponent is null.")) }
 
 	ReplicatedMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ReplicatedMeshComponent"));
 	if (ReplicatedMeshComponent)
@@ -68,7 +66,32 @@ void AMyCharacter::SetDefaults()
 		ReplicatedMeshComponent->SetupAttachment(RootComponent);
 		ReplicatedMeshComponent->CastShadow = true;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - ReplicatedMeshComponent is null.")) }
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - ReplicatedMeshComponent is null.")) }
+
+	FullBodyMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FullBodyMeshComponent"));
+	if (FullBodyMeshComponent)
+	{
+		FullBodyMeshComponent->SetOnlyOwnerSee(true);
+		FullBodyMeshComponent->SetupAttachment(RootComponent);
+		FullBodyMeshComponent->CastShadow = true;
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - FullBodyMeshComponent is null.")) }
+
+	LegsMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LegsMeshComponent"));
+	if (LegsMeshComponent)
+	{
+		LegsMeshComponent->SetOnlyOwnerSee(true);
+		LegsMeshComponent->SetupAttachment(RootComponent);
+		LegsMeshComponent->CastShadow = false;
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - LegsMeshComponent is null.")) }
+}
+
+void AMyCharacter::SetDefaults()
+{
+	CapsuleComponent = GetCapsuleComponent();
+
+	SetMeshes();
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
 	if (Camera) { Camera->SetupAttachment(RootComponent); }

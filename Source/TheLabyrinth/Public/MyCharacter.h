@@ -45,6 +45,11 @@ private:
 	USkeletalMeshComponent* FPSMeshComponent{};
 	UPROPERTY(EditDefaultsOnly);
 	USkeletalMeshComponent* ReplicatedMeshComponent{};
+	UPROPERTY(EditDefaultsOnly);
+	USkeletalMeshComponent* FullBodyMeshComponent{};
+	UPROPERTY(EditDefaultsOnly);
+	USkeletalMeshComponent* LegsMeshComponent{};
+	void SetMeshes();
 
 	UPROPERTY(EditDefaultsOnly)
 	UCameraComponent* Camera{};
