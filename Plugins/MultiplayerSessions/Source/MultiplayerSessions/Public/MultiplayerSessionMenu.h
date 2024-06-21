@@ -39,7 +39,7 @@ private:
 
 	int32 NumOfPublicConnections{2};
 	FString MatchType{TEXT("1v1")};
-	FString PathToLobby{ TEXT("/Game/Maps/Test_Lobby_Map") };
+	FString PathToLobby{ TEXT("/Game/Maps/Lobby_Map") };
 	
 public:
 

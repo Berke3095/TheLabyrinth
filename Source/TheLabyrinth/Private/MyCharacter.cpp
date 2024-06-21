@@ -51,6 +51,7 @@ void AMyCharacter::GetReferences()
 void AMyCharacter::SetDefaults()
 {
 	CapsuleComponent = GetCapsuleComponent();
+
 	FPSMeshComponent = GetMesh();
 	if (FPSMeshComponent)
 	{
@@ -58,12 +59,16 @@ void AMyCharacter::SetDefaults()
 		FPSMeshComponent->SetupAttachment(RootComponent);
 		FPSMeshComponent->CastShadow = false;
 	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - FPSMeshComponent is null.")) }
+
 	ReplicatedMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ReplicatedMeshComponent"));
 	if (ReplicatedMeshComponent)
 	{
 		ReplicatedMeshComponent->SetOwnerNoSee(true);
+		ReplicatedMeshComponent->SetupAttachment(RootComponent);
 		ReplicatedMeshComponent->CastShadow = true;
 	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - ReplicatedMeshComponent is null.")) }
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
 	if (Camera) { Camera->SetupAttachment(RootComponent); }
