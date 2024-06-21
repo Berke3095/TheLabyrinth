@@ -55,6 +55,9 @@ private:
 	UCameraComponent* Camera{};
 	void SetDefaults();
 
+	UCharacterMovementComponent* CharMovement{};
+	void SetCharacterMovement();
+
 	/*
 		INPUT
 	*/

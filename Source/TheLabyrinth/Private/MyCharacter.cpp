@@ -5,6 +5,7 @@
 
 #include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h" 
+#include "GameFramework/CharacterMovementComponent.h"
 
 AMyCharacter::AMyCharacter()
 {
@@ -90,15 +91,26 @@ void AMyCharacter::SetMeshes()
 
 void AMyCharacter::SetDefaults()
 {
-	CapsuleComponent = GetCapsuleComponent();
-
+	SetCharacterMovement();
 	SetMeshes();
 
+	CapsuleComponent = GetCapsuleComponent();
+
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
-	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 70.0f; }
+	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; }
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")) }
 
 	bUseControllerRotationYaw = false;
+	
+}
+
+void AMyCharacter::SetCharacterMovement()
+{
+	CharMovement = GetCharacterMovement();
+	if(CharMovement)
+	{
+		CharMovement->MaxWalkSpeed = 300.0f;
+	}
 }
 
 void AMyCharacter::SetupEnhancedInput()
