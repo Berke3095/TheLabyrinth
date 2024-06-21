@@ -25,8 +25,6 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	UseControllerYaw(DeltaTime);
 }
 
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -100,8 +98,7 @@ void AMyCharacter::SetDefaults()
 	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; }
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")) }
 
-	bUseControllerRotationYaw = false;
-	
+	bUseControllerRotationYaw = true;
 }
 
 void AMyCharacter::SetCharacterMovement()
@@ -155,11 +152,3 @@ void AMyCharacter::Look(const FInputActionValue& InputValue1)
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Look - PlayerController is null.")) }
 }
-
-void AMyCharacter::UseControllerYaw(float Deltatime1)
-{
-	FRotator TargetActorRotation(0.0f, GetControlRotation().Yaw, 0.0f);
-	FRotator InterpolatedRotation = FMath::RInterpTo(GetActorRotation(), TargetActorRotation, Deltatime1, 20.0f);
-	SetActorRotation(InterpolatedRotation);
-}
-

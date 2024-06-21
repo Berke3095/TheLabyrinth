@@ -73,5 +73,4 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Input")
 	UInputAction* LookAction{};
 	void Look(const FInputActionValue& InputValue1);
-	void UseControllerYaw(float Deltatime1);
 };
