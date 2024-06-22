@@ -3,7 +3,6 @@
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 
-#include "Components/SkeletalMeshComponent.h"
 #include "Camera/CameraComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -89,6 +88,8 @@ void AMyCharacter::SetMeshes()
 
 void AMyCharacter::SetDefaults()
 {
+	bReplicates = true;
+
 	SetCharacterMovement();
 	SetMeshes();
 

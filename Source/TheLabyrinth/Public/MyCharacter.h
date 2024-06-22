@@ -6,8 +6,6 @@
 
 class APlayerController;
 
-class UCapsuleComponent;
-class USkeletalMeshComponent;
 class UCameraComponent;
 
 class UInputMappingContext;
