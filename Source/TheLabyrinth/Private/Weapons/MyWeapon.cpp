@@ -18,7 +18,7 @@ void AMyWeapon::BeginPlay()
 		if (AreaSphere) 
 		{ 
 			AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly); 
-			AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+			AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 		}
 	}
 }

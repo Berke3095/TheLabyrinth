@@ -24,6 +24,9 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	EyeTrace();
+
 }
 
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -41,6 +44,47 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - EnhancedInputComponent is null.")) }
 }
 
+void AMyCharacter::EyeTrace()
+{
+	if (PlayerController)
+	{
+		int32 ViewportSizeX{}, ViewportSizeY{};
+		PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
+		FVector2D ScreenLocation(ViewportSizeX / 2.0f, ViewportSizeY / 2.0f);
+
+		FVector WorldLocation{}, WorldDirection{};
+		if (PlayerController->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection))
+		{
+			FVector End = WorldLocation + (WorldDirection * 100.0f);
+			FHitResult HitResult{};
+
+			FCollisionQueryParams CollisionParams{};
+			CollisionParams.AddIgnoredActor(this);
+
+			bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, WorldLocation, End, ECC_GameTraceChannel1, CollisionParams);
+
+			if (bHit)
+			{
+				DrawDebugSphere(
+					GetWorld(),
+					HitResult.ImpactPoint,
+					12.0f,
+					12,
+					FColor::Red
+				);
+
+				AActor* HitActor = HitResult.GetActor();
+				if (HitActor)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitActor->GetName());
+				}
+				else { HitActor = nullptr; }
+			}
+		}
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - PlayerController is null.")) }
+}
+
 void AMyCharacter::GetReferences()
 {
 	PlayerController = Cast<APlayerController>(GetController());
@@ -52,6 +96,7 @@ void AMyCharacter::SetMeshes()
 	if (FPSMeshComponent)
 	{
 		FPSMeshComponent->SetOnlyOwnerSee(true);
+		FPSMeshComponent->SetOwnerNoSee(true);
 		FPSMeshComponent->SetupAttachment(RootComponent);
 		FPSMeshComponent->CastShadow = false;
 	}
@@ -65,25 +110,6 @@ void AMyCharacter::SetMeshes()
 		ReplicatedMeshComponent->CastShadow = true;
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - ReplicatedMeshComponent is null.")) }
-
-	ShadowMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ShadowMeshComponent"));
-	if (ShadowMeshComponent)
-	{
-		ShadowMeshComponent->SetOnlyOwnerSee(true);
-		ShadowMeshComponent->bRenderInMainPass = false;
-		ShadowMeshComponent->SetupAttachment(RootComponent);
-		ShadowMeshComponent->CastShadow = true;
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - ShadowMeshComponent is null.")) }
-
-	LegsMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("LegsMeshComponent"));
-	if (LegsMeshComponent)
-	{
-		LegsMeshComponent->SetOnlyOwnerSee(true);
-		LegsMeshComponent->SetupAttachment(RootComponent);
-		LegsMeshComponent->CastShadow = false;
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - LegsMeshComponent is null.")) }
 }
 
 void AMyCharacter::SetDefaults()

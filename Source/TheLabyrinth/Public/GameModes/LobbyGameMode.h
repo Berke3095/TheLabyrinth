@@ -4,7 +4,7 @@
 #include "GameFramework/GameMode.h"
 #include "LobbyGameMode.generated.h"
 
-class UMultiplayerSessionMenu;
+//class UMultiplayerSessionMenu;
 
 UCLASS()
 class THELABYRINTH_API ALobbyGameMode : public AGameMode
@@ -15,5 +15,5 @@ private:
 
 	virtual void PostLogin(APlayerController* NewPlayer) override;
 	
-	UMultiplayerSessionMenu* MultiplayerSessionMenu{};
+	/*UMultiplayerSessionMenu* MultiplayerSessionMenu{};*/
 };

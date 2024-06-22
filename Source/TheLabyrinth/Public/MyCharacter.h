@@ -28,6 +28,8 @@ private:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	void EyeTrace();
+
 	/*
 		REFERENCES
 	*/
@@ -43,10 +45,6 @@ private:
 	USkeletalMeshComponent* FPSMeshComponent{};
 	UPROPERTY(EditDefaultsOnly);
 	USkeletalMeshComponent* ReplicatedMeshComponent{};
-	UPROPERTY(EditDefaultsOnly);
-	USkeletalMeshComponent* ShadowMeshComponent{};
-	UPROPERTY(EditDefaultsOnly);
-	USkeletalMeshComponent* LegsMeshComponent{};
 	void SetMeshes();
 
 	UPROPERTY(EditDefaultsOnly)
