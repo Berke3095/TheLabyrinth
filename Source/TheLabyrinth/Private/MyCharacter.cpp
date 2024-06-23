@@ -5,6 +5,7 @@
 
 #include "Camera/CameraComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 #include "Widgets/InteractionWidget.h"
 
@@ -110,6 +111,8 @@ void AMyCharacter::SetMeshes()
 		FPSMeshComponent->SetOwnerNoSee(true);
 		FPSMeshComponent->SetupAttachment(RootComponent);
 		FPSMeshComponent->CastShadow = false;
+		FPSMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		FPSMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - FPSMeshComponent is null.")) }
 
@@ -119,6 +122,8 @@ void AMyCharacter::SetMeshes()
 		ReplicatedMeshComponent->SetOwnerNoSee(true);
 		ReplicatedMeshComponent->SetupAttachment(RootComponent);
 		ReplicatedMeshComponent->CastShadow = true;
+		ReplicatedMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		ReplicatedMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetMeshes - ReplicatedMeshComponent is null.")) }
 }
@@ -131,6 +136,12 @@ void AMyCharacter::SetDefaults()
 	SetMeshes();
 
 	CapsuleComponent = GetCapsuleComponent();
+	if (CapsuleComponent)
+	{
+		CapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		CapsuleComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		CapsuleComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
+	}
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
 	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; }
