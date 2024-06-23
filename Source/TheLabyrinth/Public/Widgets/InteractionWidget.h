@@ -13,8 +13,10 @@ class THELABYRINTH_API UInteractionWidget : public UMyUserWidget
 
 private:
 
-	virtual void NativeConstruct() override;
-
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* InteractionText{};
+
+public:
+
+	FORCEINLINE UTextBlock* GetInteractionText() const { return InteractionText ? InteractionText : nullptr; }
 };

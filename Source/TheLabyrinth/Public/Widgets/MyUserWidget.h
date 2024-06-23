@@ -11,7 +11,7 @@ class THELABYRINTH_API UMyUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-protected:
+public:
 
 	void SetText(UTextBlock* TextBlock1, FString Text1);
 };

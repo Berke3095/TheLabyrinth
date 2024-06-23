@@ -28,8 +28,11 @@ private:
 
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	void EyeTrace();
-	int32 TraceHitActorCode{};
+	AActor* InteractableActor{};
+	void HandleInteractionWidget();
 
 	/*
 		REFERENCES
@@ -77,8 +80,4 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UInteractionWidget> InteractionWidgetClass{};
 	UInteractionWidget* InteractionWidget{};
-
-public:
-
-	FORCEINLINE const int32 GetTraceHitActorCode() const { return TraceHitActorCode; }
 };

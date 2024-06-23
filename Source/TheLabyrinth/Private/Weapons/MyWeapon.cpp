@@ -12,15 +12,6 @@ AMyWeapon::AMyWeapon()
 void AMyWeapon::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (HasAuthority())
-	{
-		if (AreaSphere) 
-		{ 
-			AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly); 
-			AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
-		}
-	}
 }
 
 void AMyWeapon::Tick(float DeltaTime)
@@ -33,6 +24,7 @@ void AMyWeapon::SetDefaults()
 {
 	bReplicates = true;
 
+	Tags.Add("Interactable");
 	Tags.Add("Weapon");
 
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
@@ -48,8 +40,9 @@ void AMyWeapon::SetDefaults()
 	if (AreaSphere)
 	{
 		AreaSphere->SetupAttachment(RootComponent);
+		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - AreaSphere is null.")) }
 }

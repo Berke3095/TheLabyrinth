@@ -9,6 +9,8 @@
 
 #include "Widgets/InteractionWidget.h"
 
+#include "Net/UnrealNetwork.h"
+
 AMyCharacter::AMyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -46,6 +48,11 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - EnhancedInputComponent is null.")) }
 }
 
+void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
 void AMyCharacter::EyeTrace()
 {
 	if (IsLocallyControlled() && PlayerController)
@@ -77,25 +84,36 @@ void AMyCharacter::EyeTrace()
 					FColor::Red
 				);
 
-				AActor* TraceHitActor = HitResult.GetActor();
-				if (TraceHitActor->ActorHasTag("Weapon"))
-				{
-					if (!InteractionWidget)
-					{
-						if (TraceHitActor->ActorHasTag("Rifle")) { TraceHitActorCode = 0; }
-						else if (TraceHitActor->ActorHasTag("Shotgun")) { TraceHitActorCode = 1; }
-
-						InteractionWidget = CreateWidget<UInteractionWidget>(PlayerController, InteractionWidgetClass);
-						if (InteractionWidget) { InteractionWidget->AddToViewport(); }
-						else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - InteractionWidget is null.")) }
-					}
-				}
-				else { TraceHitActor = nullptr; }
+				AActor* HitActor = HitResult.GetActor();
+				if (HitActor && HitActor->ActorHasTag("Interactable")) { InteractableActor = HitActor; HandleInteractionWidget(); }
 			}
-			else { if (InteractionWidget) { InteractionWidget->RemoveFromViewport(); InteractionWidget = nullptr; } }
+			else { if (InteractableActor) { InteractableActor = nullptr; } if (InteractionWidget) { InteractionWidget->RemoveFromViewport(); InteractionWidget = nullptr; } }
 		}
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - PlayerController is null.")) }
+}
+
+void AMyCharacter::HandleInteractionWidget()
+{
+	if (!InteractionWidget)
+	{
+		if (InteractableActor && InteractableActor->ActorHasTag("Weapon"))
+		{
+			InteractionWidget = CreateWidget<UInteractionWidget>(PlayerController, InteractionWidgetClass);
+			if (InteractionWidget) 
+			{ 
+				if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
+				else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
+				InteractionWidget->AddToViewport(); 
+			}
+			else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::HandleInteractionWidget - InteractionWidget is null.")) }
+		}
+	}
+	else
+	{
+		if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
+		else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
+	}
 }
 
 void AMyCharacter::GetReferences()
