@@ -29,7 +29,6 @@ void AMyCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	EyeTrace();
-
 }
 
 void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -49,7 +48,7 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 void AMyCharacter::EyeTrace()
 {
-	if (PlayerController)
+	if (IsLocallyControlled() && PlayerController)
 	{
 		int32 ViewportSizeX{}, ViewportSizeY{};
 		PlayerController->GetViewportSize(ViewportSizeX, ViewportSizeY);
@@ -63,6 +62,8 @@ void AMyCharacter::EyeTrace()
 
 			FCollisionQueryParams CollisionParams{};
 			CollisionParams.AddIgnoredActor(this);
+
+			DrawDebugLine(GetWorld(), WorldLocation, End, FColor::Red, false, -1.0f, 0.0f, 0.1f);
 
 			bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, WorldLocation, End, ECC_GameTraceChannel1, CollisionParams);
 
@@ -161,7 +162,7 @@ void AMyCharacter::SetCharacterMovement()
 
 void AMyCharacter::SetupEnhancedInput()
 {
-	if (PlayerController)
+	if (IsLocallyControlled() && PlayerController)
 	{
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
