@@ -6,6 +6,8 @@
 #include "Camera/CameraComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Widgets/InteractionWidget.h"
+
 AMyCharacter::AMyCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -73,13 +75,22 @@ void AMyCharacter::EyeTrace()
 					FColor::Red
 				);
 
-				AActor* HitActor = HitResult.GetActor();
-				if (HitActor)
+				AActor* TraceHitActor = HitResult.GetActor();
+				if (TraceHitActor->ActorHasTag("Weapon"))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *HitActor->GetName());
+					if (!InteractionWidget)
+					{
+						if (TraceHitActor->ActorHasTag("Rifle")) { TraceHitActorCode = 0; }
+						else if (TraceHitActor->ActorHasTag("Shotgun")) { TraceHitActorCode = 1; }
+
+						InteractionWidget = CreateWidget<UInteractionWidget>(PlayerController, InteractionWidgetClass);
+						if (InteractionWidget) { InteractionWidget->AddToViewport(); }
+						else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - InteractionWidget is null.")) }
+					}
 				}
-				else { HitActor = nullptr; }
+				else { TraceHitActor = nullptr; }
 			}
+			else { if (InteractionWidget) { InteractionWidget->RemoveFromViewport(); InteractionWidget = nullptr; } }
 		}
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - PlayerController is null.")) }

@@ -6,7 +6,6 @@
 
 class USphereComponent;
 
-
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {

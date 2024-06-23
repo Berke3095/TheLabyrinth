@@ -4,7 +4,7 @@
 #include "GameFramework/Character.h"
 #include "MyCharacter.generated.h"
 
-class APlayerController;
+class UInteractionWidget;
 
 class UCameraComponent;
 
@@ -29,6 +29,7 @@ private:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	void EyeTrace();
+	int32 TraceHitActorCode{};
 
 	/*
 		REFERENCES
@@ -59,14 +60,25 @@ private:
 	*/
 	void SetupEnhancedInput();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
 	UInputMappingContext* CharacterMappingContext{};
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
 	UInputAction* MoveAction{};
 	void Move(const FInputActionValue& InputValue1);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
 	UInputAction* LookAction{};
 	void Look(const FInputActionValue& InputValue1);
+
+	/*
+		WIDGETS
+	*/
+	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
+	TSubclassOf<UInteractionWidget> InteractionWidgetClass{};
+	UInteractionWidget* InteractionWidget{};
+
+public:
+
+	FORCEINLINE const int32 GetTraceHitActorCode() const { return TraceHitActorCode; }
 };

@@ -33,6 +33,8 @@ void AMyWeapon::SetDefaults()
 {
 	bReplicates = true;
 
+	Tags.Add("Weapon");
+
 	WeaponMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponMesh"));
 	if (WeaponMesh)
 	{
