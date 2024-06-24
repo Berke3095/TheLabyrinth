@@ -57,6 +57,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AMyCharacter, InteractableActor);
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -267,7 +269,6 @@ void AMyCharacter::Interact()
 
 void AMyCharacter::ServerEquip_Implementation()
 {
-	UE_LOG(LogTemp, Warning, TEXT("ServerEquip_Implementation works."));
 	if (CombatComponent && InteractableActor && InteractableActor->ActorHasTag("Weapon"))
 	{
 		AMyWeapon* Weapon = Cast<AMyWeapon>(InteractableActor);
@@ -275,7 +276,8 @@ void AMyCharacter::ServerEquip_Implementation()
 		{
 			CombatComponent->EquipWeapon(Weapon);
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - WeaponToEquip is null.")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - Weapon is null.")); }
 	}
 	else if (!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - CombatComponent is null.")); }
+	else if (!InteractableActor) { UE_LOG(LogTemp, Warning, TEXT("InteractableActor is null")); }
 }

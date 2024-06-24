@@ -31,6 +31,7 @@ private:
 	virtual void PostInitializeComponents() override;
 
 	void EyeTrace();
+	UPROPERTY(Replicated)
 	AActor* InteractableActor{};
 	void HandleInteractionWidget();
 
