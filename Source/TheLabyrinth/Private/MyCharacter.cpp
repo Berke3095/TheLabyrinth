@@ -57,8 +57,6 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(AMyCharacter, InteractableActor);
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -262,22 +260,17 @@ void AMyCharacter::Interact()
 			}
 			else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - Weapon is null.")); }
 		}
-		else { ServerEquip(); }
+		else { ServerEquip(InteractableActor); }
 	}
 	else if(!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - CombatComponent is null.")); }
 }
 
-void AMyCharacter::ServerEquip_Implementation()
+void AMyCharacter::ServerEquip_Implementation(AActor* WeaponToEquip1)
 {
-	if (CombatComponent && InteractableActor && InteractableActor->ActorHasTag("Weapon"))
+	AMyWeapon* Weapon = Cast<AMyWeapon>(WeaponToEquip1);
+	if (Weapon)
 	{
-		AMyWeapon* Weapon = Cast<AMyWeapon>(InteractableActor);
-		if (Weapon)
-		{
-			CombatComponent->EquipWeapon(Weapon);
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - Weapon is null.")); }
+		CombatComponent->EquipWeapon(Weapon);
 	}
-	else if (!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - CombatComponent is null.")); }
-	else if (!InteractableActor) { UE_LOG(LogTemp, Warning, TEXT("InteractableActor is null")); }
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - Weapon is null.")); }
 }

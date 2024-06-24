@@ -31,7 +31,6 @@ private:
 	virtual void PostInitializeComponents() override;
 
 	void EyeTrace();
-	UPROPERTY(Replicated)
 	AActor* InteractableActor{};
 	void HandleInteractionWidget();
 
@@ -93,7 +92,7 @@ private:
 		MULTIPLAYER
 	*/
 	UFUNCTION(Server, Reliable)
-	void ServerEquip();
+	void ServerEquip(AActor* WeaponToEquip1);
 
 public:
 

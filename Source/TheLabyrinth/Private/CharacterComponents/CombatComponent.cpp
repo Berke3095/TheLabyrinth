@@ -28,7 +28,6 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 	if (MyCharacter && WeaponToEquip1)
 	{
 		EquippedWeapon = WeaponToEquip1;
-		EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
 		EquippedWeapon->SetEquippedWeaponSettings();
 		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
 		if (HandSocket)

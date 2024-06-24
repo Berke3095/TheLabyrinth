@@ -61,6 +61,8 @@ void AMyWeapon::SetEquippedWeaponSettings()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
+
+	WeaponState = EWeaponState::EWS_Equipped;
 }
 
 void AMyWeapon::SetDroppedWeaponSettings()
@@ -76,4 +78,6 @@ void AMyWeapon::SetDroppedWeaponSettings()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
+
+	WeaponState = EWeaponState::EWS_Dropped;
 }
