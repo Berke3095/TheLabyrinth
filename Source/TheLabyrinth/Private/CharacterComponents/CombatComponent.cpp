@@ -1,6 +1,9 @@
 #include "CharacterComponents/CombatComponent.h"
 
 #include "Weapons/MyWeapon.h"
+#include "MyCharacter.h"
+
+#include "Engine/SkeletalMeshSocket.h"
 
 UCombatComponent::UCombatComponent()
 {
@@ -24,9 +27,16 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 {
 	if (MyCharacter && WeaponToEquip1)
 	{
-
+		EquippedWeapon = WeaponToEquip1;
+		EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
+		if (HandSocket)
+		{
+			HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
+		}
+		EquippedWeapon->SetOwner(MyCharacter);
 	}
-	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")) }
+	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")); }
 	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - %s is null."), *WeaponToEquip1->GetName()) }
 }
 

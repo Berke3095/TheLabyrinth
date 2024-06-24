@@ -10,7 +10,9 @@ UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {
 	EWS_Initial UMETA(DisplayName = "Initial State"),
-	EWS_Equipped UMETA(DisplayName = "Equipped State")
+	EWS_Equipped UMETA(DisplayName = "Equipped State"),
+	EWS_Dropped UMETA(DisplayName = "Dropped State"),
+	EWS_NONE UMETA(DisplayName = "NONE")
 };
 
 UCLASS()
@@ -30,7 +32,7 @@ protected:
 private:
 
 	UPROPERTY(EditDefaultsOnly)
-	USkeletalMeshComponent* WeaponMesh{};
+	USkeletalMeshComponent* WeaponReplicatedMesh{};
 
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* AreaSphere{};
@@ -38,4 +40,8 @@ private:
 	void SetDefaults();
 
 	EWeaponState WeaponState{ EWeaponState::EWS_Initial };
+
+public:
+
+	void SetWeaponState(EWeaponState State1) { WeaponState = State1; }
 };

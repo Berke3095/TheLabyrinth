@@ -37,8 +37,8 @@ private:
 
 	void MenuDestruct();
 
-	int32 NumOfPublicConnections{2};
-	FString MatchType{TEXT("1v1")};
+	int32 NumOfPublicConnections{4};
+	FString MatchType{TEXT("FreeForAll")};
 	FString PathToLobby{ TEXT("/Game/Maps/Lobby_Map") };
 	
 public:

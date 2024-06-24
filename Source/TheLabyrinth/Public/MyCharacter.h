@@ -87,4 +87,14 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Widgets")
 	TSubclassOf<UInteractionWidget> InteractionWidgetClass{};
 	UInteractionWidget* InteractionWidget{};
+
+	/*
+		MULTIPLAYER
+	*/
+	UFUNCTION(Server, Reliable)
+	void ServerEquip();
+
+public:
+
+	FORCEINLINE USkeletalMeshComponent* GetReplicatedMesh() const { return ReplicatedMeshComponent ? ReplicatedMeshComponent : nullptr; }
 };
