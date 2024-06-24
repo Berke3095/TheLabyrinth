@@ -8,15 +8,11 @@
 UCombatComponent::UCombatComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
-
-	SetIsReplicated(true);
 }
 
 void UCombatComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	MyCharacter = Cast<AMyCharacter>(GetOwner());
 }
 
 void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
