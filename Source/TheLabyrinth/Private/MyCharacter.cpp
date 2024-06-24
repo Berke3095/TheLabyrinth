@@ -6,6 +6,7 @@
 #include "Camera/CameraComponent.h" 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "CharacterComponents/CombatComponent.h"
 
 #include "Widgets/InteractionWidget.h"
 
@@ -44,6 +45,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 		if(LookAction) { EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMyCharacter::Look); }
 		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - LookAction is null.")) }
+
+		if (InteractAction) { EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Completed, this, &AMyCharacter::Interact); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - InteractAction is null.")) }
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - EnhancedInputComponent is null.")) }
 }
@@ -51,6 +55,16 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
+void AMyCharacter::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (CombatComponent)
+	{
+		CombatComponent->MyCharacter = this;
+	}
 }
 
 void AMyCharacter::EyeTrace()
@@ -166,6 +180,12 @@ void AMyCharacter::SetDefaults()
 	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; }
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")) }
 
+	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
+	if (CombatComponent)
+	{
+		CombatComponent->SetIsReplicated(true);
+	}
+
 	bUseControllerRotationYaw = true;
 }
 
@@ -219,4 +239,9 @@ void AMyCharacter::Look(const FInputActionValue& InputValue1)
 		AddControllerPitchInput(Value.Y);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Look - PlayerController is null.")) }
+}
+
+void AMyCharacter::Interact()
+{
+
 }

@@ -7,6 +7,7 @@
 class UInteractionWidget;
 
 class UCameraComponent;
+class UCombatComponent;
 
 class UInputMappingContext;
 class UInputAction;
@@ -25,10 +26,9 @@ private:
 
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PostInitializeComponents() override;
 
 	void EyeTrace();
 	AActor* InteractableActor{};
@@ -58,6 +58,9 @@ private:
 	UCharacterMovementComponent* CharMovement{};
 	void SetCharacterMovement();
 
+	UPROPERTY(EditDefaultsOnly)
+	UCombatComponent* CombatComponent{};
+
 	/*
 		INPUT
 	*/
@@ -73,6 +76,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
 	UInputAction* LookAction{};
 	void Look(const FInputActionValue& InputValue1);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
+	UInputAction* InteractAction{};
+	void Interact();
 
 	/*
 		WIDGETS
