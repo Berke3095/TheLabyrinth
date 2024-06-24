@@ -63,6 +63,8 @@ void AMyWeapon::SetEquippedWeaponSettings()
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
 
 	WeaponState = EWeaponState::EWS_Equipped;
+
+	UE_LOG(LogTemp, Warning, TEXT("Equip settings applied"));
 }
 
 void AMyWeapon::SetDroppedWeaponSettings()
