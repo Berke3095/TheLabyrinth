@@ -19,13 +19,9 @@ private:
 
 	virtual void BeginPlay() override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	AMyCharacter* MyCharacter{};
-	UPROPERTY(ReplicatedUsing = OnRep_EquippedWeapon)
 	AMyWeapon* EquippedWeapon{};
-	UFUNCTION()
-	void OnRep_EquippedWeapon();
 
 	void EquipWeapon(AMyWeapon* WeaponToEquip1);
 };

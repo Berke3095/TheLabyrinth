@@ -2,6 +2,8 @@
 
 #include "Components/SphereComponent.h"
 
+#include "Net/UnrealNetwork.h"
+
 AMyWeapon::AMyWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -20,6 +22,13 @@ void AMyWeapon::Tick(float DeltaTime)
 
 }
 
+void AMyWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AMyWeapon, WeaponProperties);
+}
+
 void AMyWeapon::SetDefaults()
 {
 	bReplicates = true;
@@ -27,59 +36,71 @@ void AMyWeapon::SetDefaults()
 	Tags.Add("Interactable");
 	Tags.Add("Weapon");
 
-	WeaponReplicatedMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponReplicatedMesh"));
-	if (WeaponReplicatedMesh)
+	WeaponProperties.WeaponReplicatedMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponReplicatedMesh"));
+	if (WeaponProperties.WeaponReplicatedMesh)
 	{
-		SetRootComponent(WeaponReplicatedMesh);
-		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		WeaponReplicatedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		WeaponReplicatedMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
+		SetRootComponent(WeaponProperties.WeaponReplicatedMesh);
+		WeaponProperties.WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		WeaponProperties.WeaponReplicatedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		WeaponProperties.WeaponReplicatedMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponReplicatedMesh is null.")); }
 
-	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
-	if (AreaSphere)
+	WeaponProperties.AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
+	if (WeaponProperties.AreaSphere)
 	{
-		AreaSphere->SetupAttachment(RootComponent);
-		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
+		WeaponProperties.AreaSphere->SetupAttachment(RootComponent);
+		WeaponProperties.AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		WeaponProperties.AreaSphere->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		WeaponProperties.AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - AreaSphere is null.")); }
 }
 
+void AMyWeapon::OnRep_WeaponProperties()
+{
+	if (WeaponProperties.WeaponState == EWeaponState::EWS_Equipped)
+	{
+		SetEquippedWeaponSettings();
+	}
+	else if (WeaponProperties.WeaponState == EWeaponState::EWS_Dropped)
+	{
+		SetDroppedWeaponSettings();
+	}
+}
+
 void AMyWeapon::SetEquippedWeaponSettings()
 {
-	if (AreaSphere)
+	if (WeaponProperties.AreaSphere)
 	{
-		AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		WeaponProperties.AreaSphere->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - AreaSphere is null.")); }
 
-	if (WeaponReplicatedMesh)
+	if (WeaponProperties.WeaponReplicatedMesh)
 	{
-		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		WeaponProperties.WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
 
-	WeaponState = EWeaponState::EWS_Equipped;
+	WeaponProperties.WeaponState = EWeaponState::EWS_Equipped;
 
 	UE_LOG(LogTemp, Warning, TEXT("Equip settings applied"));
 }
 
 void AMyWeapon::SetDroppedWeaponSettings()
 {
-	if (AreaSphere)
+	if (WeaponProperties.AreaSphere)
 	{
-		AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		WeaponProperties.AreaSphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - AreaSphere is null.")); }
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - AreaSphere is null.")); }
 
-	if (WeaponReplicatedMesh)
+	if (WeaponProperties.WeaponReplicatedMesh)
 	{
-		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		WeaponProperties.WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - WeaponReplicatedMesh is null.")); }
 
-	WeaponState = EWeaponState::EWS_Dropped;
+	WeaponProperties.WeaponState = EWeaponState::EWS_Dropped;
 }
