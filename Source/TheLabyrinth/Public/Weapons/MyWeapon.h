@@ -25,9 +25,6 @@ struct FWeaponProperties
 
 	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* AreaSphere;
-
-	UPROPERTY(EditDefaultsOnly)
-	EWeaponState WeaponState{ EWeaponState::EWS_Initial };
 };
 
 UCLASS()
@@ -49,12 +46,16 @@ private:
 
 	void SetDefaults();
 
-	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_WeaponProperties)
+	UPROPERTY(ReplicatedUsing = OnRep_WeaponProperties)
 	FWeaponProperties WeaponProperties{};
+	UPROPERTY(ReplicatedUsing = OnRep_WeaponProperties)
+	EWeaponState WeaponState{ EWeaponState::EWS_Initial };
 	UFUNCTION()
 	void OnRep_WeaponProperties();
 
 public:
+
+	void SetWeaponState(EWeaponState WeaponState1) { WeaponState = WeaponState1; }
 
 	void SetEquippedWeaponSettings();
 	void SetDroppedWeaponSettings();

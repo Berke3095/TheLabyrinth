@@ -187,10 +187,6 @@ void AMyCharacter::SetDefaults()
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")); }
 
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
-	if (CombatComponent)
-	{
-		CombatComponent->SetIsReplicated(true);
-	}
 
 	bUseControllerRotationYaw = true;
 }

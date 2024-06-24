@@ -27,6 +27,7 @@ void AMyWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(AMyWeapon, WeaponProperties);
+	DOREPLIFETIME(AMyWeapon, WeaponState);
 }
 
 void AMyWeapon::SetDefaults()
@@ -59,11 +60,11 @@ void AMyWeapon::SetDefaults()
 
 void AMyWeapon::OnRep_WeaponProperties()
 {
-	if (WeaponProperties.WeaponState == EWeaponState::EWS_Equipped)
+	if (WeaponState == EWeaponState::EWS_Equipped)
 	{
 		SetEquippedWeaponSettings();
 	}
-	else if (WeaponProperties.WeaponState == EWeaponState::EWS_Dropped)
+	else if (WeaponState == EWeaponState::EWS_Dropped)
 	{
 		SetDroppedWeaponSettings();
 	}
@@ -82,10 +83,6 @@ void AMyWeapon::SetEquippedWeaponSettings()
 		WeaponProperties.WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
-
-	WeaponProperties.WeaponState = EWeaponState::EWS_Equipped;
-
-	UE_LOG(LogTemp, Warning, TEXT("Equip settings applied"));
 }
 
 void AMyWeapon::SetDroppedWeaponSettings()
@@ -101,6 +98,4 @@ void AMyWeapon::SetDroppedWeaponSettings()
 		WeaponProperties.WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - WeaponReplicatedMesh is null.")); }
-
-	WeaponProperties.WeaponState = EWeaponState::EWS_Dropped;
 }
