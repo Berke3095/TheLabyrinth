@@ -44,4 +44,7 @@ private:
 public:
 
 	void SetWeaponState(EWeaponState State1) { WeaponState = State1; }
+
+	void SetEquippedWeaponSettings();
+	void SetDroppedWeaponSettings();
 };

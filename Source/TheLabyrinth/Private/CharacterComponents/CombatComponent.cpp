@@ -29,6 +29,7 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 	{
 		EquippedWeapon = WeaponToEquip1;
 		EquippedWeapon->SetWeaponState(EWeaponState::EWS_Equipped);
+		EquippedWeapon->SetEquippedWeaponSettings();
 		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
 		if (HandSocket)
 		{
@@ -37,6 +38,6 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 		EquippedWeapon->SetOwner(MyCharacter);
 	}
 	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")); }
-	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - %s is null."), *WeaponToEquip1->GetName()) }
+	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponToEquip1 is null.")) }
 }
 

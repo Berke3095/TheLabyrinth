@@ -106,21 +106,21 @@ void AMyCharacter::EyeTrace()
 			else { if (InteractableActor) { InteractableActor = nullptr; } if (InteractionWidget) { InteractionWidget->RemoveFromViewport(); InteractionWidget = nullptr; } }
 		}
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - PlayerController is null.")); }
+	else if(!PlayerController) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::EyeTrace - PlayerController is null.")); }
 }
 
 void AMyCharacter::HandleInteractionWidget()
 {
-	if (!InteractionWidget)
+	if (!InteractionWidget && InteractableActor)
 	{
-		if (InteractableActor && InteractableActor->ActorHasTag("Weapon"))
+		if (InteractableActor->ActorHasTag("Weapon"))
 		{
 			InteractionWidget = CreateWidget<UInteractionWidget>(PlayerController, InteractionWidgetClass);
-			if (InteractionWidget) 
-			{ 
+			if (InteractionWidget)
+			{
 				if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
 				else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
-				InteractionWidget->AddToViewport(); 
+				InteractionWidget->AddToViewport();
 			}
 			else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::HandleInteractionWidget - InteractionWidget is null.")); }
 		}
@@ -134,7 +134,11 @@ void AMyCharacter::HandleInteractionWidget()
 
 void AMyCharacter::GetReferences()
 {
-	PlayerController = Cast<APlayerController>(GetController());
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		PlayerController = World->GetFirstPlayerController();
+	}
 }
 
 void AMyCharacter::SetMeshes()
@@ -210,7 +214,7 @@ void AMyCharacter::SetupEnhancedInput()
 		}
 		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupEnhancedInput - Subsystem is null.")); }
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupEnhancedInput - PlayerController is null.")); }
+	else if(!PlayerController) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupEnhancedInput - PlayerController is null.")); }
 }
 
 void AMyCharacter::Move(const FInputActionValue& InputValue1)
@@ -258,11 +262,12 @@ void AMyCharacter::Interact()
 		}
 		else { ServerEquip(); }
 	}
-	else if(CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - Weapon is null.")); }
+	else if(!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - CombatComponent is null.")); }
 }
 
 void AMyCharacter::ServerEquip_Implementation()
 {
+	UE_LOG(LogTemp, Warning, TEXT("ServerEquip_Implementation works."));
 	if (CombatComponent && InteractableActor && InteractableActor->ActorHasTag("Weapon"))
 	{
 		AMyWeapon* Weapon = Cast<AMyWeapon>(InteractableActor);
@@ -270,7 +275,7 @@ void AMyCharacter::ServerEquip_Implementation()
 		{
 			CombatComponent->EquipWeapon(Weapon);
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - Weapon is null.")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - WeaponToEquip is null.")); }
 	}
-	else if (CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - CombatComponent is null.")); }
+	else if (!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - CombatComponent is null.")); }
 }
