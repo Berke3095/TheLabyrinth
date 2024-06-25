@@ -48,6 +48,7 @@ void UCombatComponent::DropWeapon()
 		EquippedWeapon->SetDroppedWeaponSettings();
 		EquippedWeapon->SetOwner(nullptr);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_UnEquipped);
+
 		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
 		if (HandSocket)
 		{

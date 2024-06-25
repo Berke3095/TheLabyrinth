@@ -45,7 +45,6 @@ void AMyWeapon::SetDefaults()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		WeaponReplicatedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		WeaponReplicatedMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
-		WeaponReplicatedMesh->SetSimulatePhysics(false);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponReplicatedMesh is null.")); }
 
@@ -85,7 +84,6 @@ void AMyWeapon::SetEquippedWeaponSettings()
 
 	if (WeaponReplicatedMesh)
 	{
-		WeaponReplicatedMesh->SetSimulatePhysics(false);
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
@@ -103,8 +101,7 @@ void AMyWeapon::SetDroppedWeaponSettings()
 
 	if (WeaponReplicatedMesh)
 	{
-		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
-		WeaponReplicatedMesh->SetSimulatePhysics(true);
+		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - WeaponReplicatedMesh is null.")); }
 
