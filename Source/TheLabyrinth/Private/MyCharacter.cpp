@@ -57,6 +57,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AMyCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AMyCharacter, CharacterState);
 }
 
 void AMyCharacter::PostInitializeComponents()
@@ -153,6 +155,21 @@ void AMyCharacter::HandleInteractionWidget()
 		default:
 			break;
 		}
+	}
+}
+
+void AMyCharacter::OnRep_CharacterState()
+{
+	switch (CharacterState)
+	{
+	case ECharacterState::ECS_Equipped:
+		CharacterState = ECharacterState::ECS_Equipped;
+		break;
+	case ECharacterState::ECS_UnEquipped:
+		CharacterState = ECharacterState::ECS_UnEquipped;
+		break;
+	default:
+		break;
 	}
 }
 
