@@ -82,7 +82,7 @@ void AMyCharacter::EyeTrace()
 		FVector WorldLocation{}, WorldDirection{};
 		if (PlayerController->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection))
 		{
-			FVector End = WorldLocation + (WorldDirection * 120.0f);
+			FVector End = WorldLocation + (WorldDirection * 140.0f);
 			FHitResult HitResult{};
 
 			FCollisionQueryParams CollisionParams{};
@@ -297,6 +297,8 @@ void AMyCharacter::Interact()
 {
 	if (CombatComponent && InteractableActor && InteractableActor->ActorHasTag("Weapon"))
 	{
+		CombatComponent->EquipWeaponTransform = InteractableActor->GetActorTransform();
+
 		if (CharacterState == ECharacterState::ECS_Equipped)
 		{
 			if (HasAuthority())

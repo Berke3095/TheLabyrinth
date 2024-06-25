@@ -54,6 +54,7 @@ void UCombatComponent::DropWeapon()
 		{
 			EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		}
+		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
 		EquippedWeapon = nullptr;
 	}
 	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }

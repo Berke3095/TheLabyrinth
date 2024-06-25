@@ -22,6 +22,7 @@ private:
 
 	AMyCharacter* MyCharacter{};
 	AMyWeapon* EquippedWeapon{};
+	FTransform EquipWeaponTransform{};
 
 	void EquipWeapon(AMyWeapon* WeaponToEquip1);
 	void DropWeapon();
