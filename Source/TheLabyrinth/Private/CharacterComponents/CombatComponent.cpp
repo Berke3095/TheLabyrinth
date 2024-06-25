@@ -21,26 +21,30 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
-void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
+void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
 {
 	if (MyCharacter && WeaponToEquip1)
 	{
-		EquippedWeapon = WeaponToEquip1;
-		EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
-		EquippedWeapon->SetEquippedWeaponSettings();
-		MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
-		EquippedWeapon->SetOwner(MyCharacter);
-		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
-		if (HandSocket)
+		AMyWeapon* Weapon = Cast<AMyWeapon>(WeaponToEquip1);
+		if (Weapon)
 		{
-			HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
+			EquippedWeapon = Weapon;
+			EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
+			EquippedWeapon->SetEquippedWeaponSettings();
+			MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
+			EquippedWeapon->SetOwner(MyCharacter);
+			const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
+			if (HandSocket)
+			{
+				HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
+			}
 		}
 	}
 	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")); }
 	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponToEquip1 is null.")) }
 }
 
-void UCombatComponent::DropWeapon()
+void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
 {
 	if (MyCharacter && EquippedWeapon)
 	{
@@ -54,6 +58,7 @@ void UCombatComponent::DropWeapon()
 		{
 			EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 		}
+		EquipWeaponTransform = SwapWeapon1->GetActorTransform();
 		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
 		EquippedWeapon = nullptr;
 	}

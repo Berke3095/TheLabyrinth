@@ -49,7 +49,7 @@ private:
 	void ServerEquip(AActor* WeaponToEquip1);
 
 	UFUNCTION(Server, Reliable)
-	void ServerDrop();
+	void ServerDrop(AActor* SwapWeapon1);
 
 	UPROPERTY(ReplicatedUsing = OnRep_CharacterState)
 	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };

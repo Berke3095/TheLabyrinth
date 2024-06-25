@@ -158,9 +158,9 @@ void AMyCharacter::HandleInteractionWidget()
 	}
 }
 
-void AMyCharacter::ServerDrop_Implementation()
+void AMyCharacter::ServerDrop_Implementation(AActor* SwapWeapon1)
 {
-	CombatComponent->DropWeapon();
+	CombatComponent->DropWeapon(SwapWeapon1);
 }
 
 void AMyCharacter::OnRep_CharacterState()
@@ -297,25 +297,18 @@ void AMyCharacter::Interact()
 {
 	if (CombatComponent && InteractableActor && InteractableActor->ActorHasTag("Weapon"))
 	{
-		CombatComponent->EquipWeaponTransform = InteractableActor->GetActorTransform();
-
 		if (CharacterState == ECharacterState::ECS_Equipped)
 		{
 			if (HasAuthority())
 			{
-				CombatComponent->DropWeapon();
+				CombatComponent->DropWeapon(InteractableActor);
 			}
-			else { ServerDrop(); }
+			else { ServerDrop(InteractableActor); }
 		}
 
 		if (HasAuthority())
 		{
-			AMyWeapon* Weapon = Cast<AMyWeapon>(InteractableActor);
-			if (Weapon)
-			{
-				CombatComponent->EquipWeapon(Weapon);
-			}
-			else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - Weapon is null.")); }
+			CombatComponent->EquipWeapon(InteractableActor);
 		}
 		else { ServerEquip(InteractableActor); }
 	}
@@ -324,10 +317,5 @@ void AMyCharacter::Interact()
 
 void AMyCharacter::ServerEquip_Implementation(AActor* WeaponToEquip1)
 {
-	AMyWeapon* Weapon = Cast<AMyWeapon>(WeaponToEquip1);
-	if (Weapon)
-	{
-		CombatComponent->EquipWeapon(Weapon);
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::ServerEquip_Implementation - Weapon is null.")); }
+	CombatComponent->EquipWeapon(WeaponToEquip1);
 }

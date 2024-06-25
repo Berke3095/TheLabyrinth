@@ -24,6 +24,6 @@ private:
 	AMyWeapon* EquippedWeapon{};
 	FTransform EquipWeaponTransform{};
 
-	void EquipWeapon(AMyWeapon* WeaponToEquip1);
-	void DropWeapon();
+	void EquipWeapon(AActor* WeaponToEquip1);
+	void DropWeapon(AActor* SwapWeapon1);
 };
