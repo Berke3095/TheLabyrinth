@@ -15,18 +15,6 @@ enum class EWeaponState : uint8
 	EWS_NONE UMETA(DisplayName = "NONE")
 };
 
-USTRUCT(BlueprintType)
-struct FWeaponProperties
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly)
-	USkeletalMeshComponent* WeaponReplicatedMesh{};
-
-	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* AreaSphere{};
-};
-
 UCLASS()
 class THELABYRINTH_API AMyWeapon : public AActor
 {
@@ -46,8 +34,11 @@ private:
 
 	void SetDefaults();
 
-	UPROPERTY(ReplicatedUsing = OnRep_WeaponProperties)
-	FWeaponProperties WeaponProperties{};
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_WeaponProperties)
+	USkeletalMeshComponent* WeaponReplicatedMesh{};
+
+	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_WeaponProperties)
+	USphereComponent* AreaSphere{};
 	UPROPERTY(ReplicatedUsing = OnRep_WeaponProperties)
 	EWeaponState WeaponState{ EWeaponState::EWS_Initial };
 	UFUNCTION()
