@@ -60,13 +60,14 @@ void AMyWeapon::SetDefaults()
 
 void AMyWeapon::OnRep_WeaponProperties()
 {
-	if (WeaponState == EWeaponState::EWS_Equipped)
+	switch (WeaponState)
 	{
+	case EWeaponState::EWS_Equipped:
 		SetEquippedWeaponSettings();
-	}
-	else if (WeaponState == EWeaponState::EWS_Dropped)
-	{
+		break;
+	case EWeaponState::EWS_Dropped:
 		SetDroppedWeaponSettings();
+		break;
 	}
 }
 
