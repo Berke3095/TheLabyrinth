@@ -24,4 +24,5 @@ private:
 	AMyWeapon* EquippedWeapon{};
 
 	void EquipWeapon(AMyWeapon* WeaponToEquip1);
+	void DropWeapon();
 };

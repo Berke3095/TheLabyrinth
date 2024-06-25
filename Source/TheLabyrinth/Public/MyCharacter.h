@@ -48,6 +48,9 @@ private:
 	UFUNCTION(Server, Reliable)
 	void ServerEquip(AActor* WeaponToEquip1);
 
+	UFUNCTION(Server, Reliable)
+	void ServerDrop();
+
 	UPROPERTY(ReplicatedUsing = OnRep_CharacterState)
 	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };
 	UFUNCTION()

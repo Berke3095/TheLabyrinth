@@ -158,6 +158,11 @@ void AMyCharacter::HandleInteractionWidget()
 	}
 }
 
+void AMyCharacter::ServerDrop_Implementation()
+{
+	CombatComponent->DropWeapon();
+}
+
 void AMyCharacter::OnRep_CharacterState()
 {
 	switch (CharacterState)
@@ -292,6 +297,15 @@ void AMyCharacter::Interact()
 {
 	if (CombatComponent && InteractableActor && InteractableActor->ActorHasTag("Weapon"))
 	{
+		if (CharacterState == ECharacterState::ECS_Equipped)
+		{
+			if (HasAuthority())
+			{
+				CombatComponent->DropWeapon();
+			}
+			else { ServerDrop(); }
+		}
+
 		if (HasAuthority())
 		{
 			AMyWeapon* Weapon = Cast<AMyWeapon>(InteractableActor);
