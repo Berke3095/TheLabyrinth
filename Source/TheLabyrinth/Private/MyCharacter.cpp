@@ -82,7 +82,7 @@ void AMyCharacter::EyeTrace()
 		FVector WorldLocation{}, WorldDirection{};
 		if (PlayerController->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection))
 		{
-			FVector End = WorldLocation + (WorldDirection * 100.0f);
+			FVector End = WorldLocation + (WorldDirection * 120.0f);
 			FHitResult HitResult{};
 
 			FCollisionQueryParams CollisionParams{};
