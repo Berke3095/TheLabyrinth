@@ -10,8 +10,8 @@ UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {
 	EWS_Initial UMETA(DisplayName = "Initial State"),
-	EWS_Equipped UMETA(DisplayName = "Equipped State"),
-	EWS_Dropped UMETA(DisplayName = "Dropped State"),
+	EWS_IsEquipped UMETA(DisplayName = "IsEquipped State"),
+	EWS_IsDropped UMETA(DisplayName = "IsDropped State"),
 	EWS_NONE UMETA(DisplayName = "NONE")
 };
 
@@ -21,10 +21,10 @@ struct FWeaponProperties
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly)
-	USkeletalMeshComponent* WeaponReplicatedMesh;
+	USkeletalMeshComponent* WeaponReplicatedMesh{};
 
 	UPROPERTY(EditDefaultsOnly)
-	USphereComponent* AreaSphere;
+	USphereComponent* AreaSphere{};
 };
 
 UCLASS()

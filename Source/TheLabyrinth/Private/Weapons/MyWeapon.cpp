@@ -62,11 +62,13 @@ void AMyWeapon::OnRep_WeaponProperties()
 {
 	switch (WeaponState)
 	{
-	case EWeaponState::EWS_Equipped:
+	case EWeaponState::EWS_IsEquipped:
 		SetEquippedWeaponSettings();
 		break;
-	case EWeaponState::EWS_Dropped:
+	case EWeaponState::EWS_IsDropped:
 		SetDroppedWeaponSettings();
+		break;
+	default:
 		break;
 	}
 }

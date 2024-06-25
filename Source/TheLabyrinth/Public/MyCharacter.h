@@ -13,6 +13,14 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 
+UENUM(BlueprintType)
+enum class ECharacterState : uint8
+{
+	ECS_UnEquipped UMETA(DisplayName = "UnEquipped State"),
+	ECS_Equipped UMETA(DisplayName = "Equipped State"),
+	ECS_NONE UMETA(DisplayName = "NONE")
+};
+
 UCLASS()
 class THELABYRINTH_API AMyCharacter : public ACharacter
 {
@@ -30,9 +38,17 @@ private:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostInitializeComponents() override;
 
+	/*
+		FUNCTIONALITY
+	*/
 	void EyeTrace();
 	AActor* InteractableActor{};
 	void HandleInteractionWidget();
+
+	UFUNCTION(Server, Reliable)
+	void ServerEquip(AActor* WeaponToEquip1);
+
+	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };
 
 	/*
 		REFERENCES
@@ -88,13 +104,8 @@ private:
 	TSubclassOf<UInteractionWidget> InteractionWidgetClass{};
 	UInteractionWidget* InteractionWidget{};
 
-	/*
-		MULTIPLAYER
-	*/
-	UFUNCTION(Server, Reliable)
-	void ServerEquip(AActor* WeaponToEquip1);
-
 public:
 
 	FORCEINLINE USkeletalMeshComponent* GetReplicatedMesh() const { return ReplicatedMeshComponent ? ReplicatedMeshComponent : nullptr; }
+	void SetCharacterState(ECharacterState CharacterState1) { CharacterState = CharacterState1; }
 };

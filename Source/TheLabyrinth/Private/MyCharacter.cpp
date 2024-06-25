@@ -118,17 +118,41 @@ void AMyCharacter::HandleInteractionWidget()
 			InteractionWidget = CreateWidget<UInteractionWidget>(PlayerController, InteractionWidgetClass);
 			if (InteractionWidget)
 			{
-				if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
-				else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
-				InteractionWidget->AddToViewport();
+				switch (CharacterState)
+				{
+				case ECharacterState::ECS_UnEquipped:
+					if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
+					else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
+					InteractionWidget->AddToViewport();
+					break;
+				case ECharacterState::ECS_Equipped:
+					if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Rifle"); }
+					else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Shotgun"); }
+					InteractionWidget->AddToViewport();
+					break;
+				default:
+					break;
+				}
+				
 			}
 			else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::HandleInteractionWidget - InteractionWidget is null.")); }
 		}
 	}
 	else
 	{
-		if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
-		else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
+		switch (CharacterState)
+		{
+		case ECharacterState::ECS_UnEquipped:
+			if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
+			else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
+			break;
+		case ECharacterState::ECS_Equipped:
+			if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Rifle"); }
+			else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Shotgun"); }
+			break;
+		default:
+			break;
+		}
 	}
 }
 
