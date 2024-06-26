@@ -158,11 +158,6 @@ void AMyCharacter::HandleInteractionWidget()
 	}
 }
 
-void AMyCharacter::Server_PlaceWeapon_Implementation(AActor* SwapWeapon1)
-{
-	CombatComponent->PlaceWeapon(SwapWeapon1);
-}
-
 void AMyCharacter::Server_DropWeapon_Implementation(AActor* SwapWeapon1)
 {
 	CombatComponent->DropWeapon(SwapWeapon1);
@@ -292,9 +287,8 @@ void AMyCharacter::Interact()
 			if (HasAuthority())
 			{
 				CombatComponent->DropWeapon(InteractableActor);
-				CombatComponent->PlaceWeapon(InteractableActor);
 			}
-			else { Server_DropWeapon(InteractableActor); Server_PlaceWeapon(InteractableActor); }
+			else { Server_DropWeapon(InteractableActor); }
 		}
 
 		if (HasAuthority())

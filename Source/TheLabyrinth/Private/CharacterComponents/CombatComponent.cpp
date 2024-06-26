@@ -60,19 +60,11 @@ void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
 		MyCharacter->SetCharacterState(ECharacterState::ECS_UnEquipped);
 
 		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-	}
-	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
-	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
-}
 
-void UCombatComponent::PlaceWeapon(AActor* SwapWeapon1)
-{
-	if (EquippedWeapon)
-	{
 		EquipWeaponTransform = SwapWeapon1->GetActorTransform();
 		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
 		EquippedWeapon = nullptr;
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::PlaceWeapon - EquippedWeapon is null.")) }
+	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
+	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
 }
-

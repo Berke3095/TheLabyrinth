@@ -50,9 +50,6 @@ private:
 	UFUNCTION(Server, Reliable)
 	void Server_DropWeapon(AActor* SwapWeapon1);
 
-	UFUNCTION(Server, Reliable)
-	void Server_PlaceWeapon(AActor* SwapWeapon1);
-
 	UPROPERTY(Replicated)
 	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };
 
