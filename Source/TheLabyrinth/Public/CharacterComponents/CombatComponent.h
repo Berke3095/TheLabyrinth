@@ -22,11 +22,10 @@ private:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	AMyCharacter* MyCharacter{};
-	UPROPERTY(Replicated)
 	AMyWeapon* EquippedWeapon{};
 
-	void EquipWeapon(AActor* WeaponToEquip1);
-	void DropWeapon(AActor* SwapWeapon1);
+	void EquipWeapon(AMyWeapon* WeaponToEquip1);
+	void DropWeapon(AMyWeapon* SwapWeapon1);
 	UFUNCTION(NetMulticast, Reliable)
-	void Multicast_PlaceWeapon(AActor* SwapWeapon1);
+	void Multicast_PlaceWeapon(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1);
 };

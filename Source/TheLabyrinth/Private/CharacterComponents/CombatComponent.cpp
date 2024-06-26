@@ -25,34 +25,28 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(UCombatComponent, EquippedWeapon);
 }
 
-void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
+void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 {
 	if (MyCharacter && WeaponToEquip1)
 	{
-		AMyWeapon* Weapon = Cast<AMyWeapon>(WeaponToEquip1);
-		if (Weapon)
+		EquippedWeapon = WeaponToEquip1;
+		EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
+		EquippedWeapon->SetOwner(MyCharacter);
+		MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
+
+		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
+		if (HandSocket)
 		{
-			EquippedWeapon = Weapon;
-			EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
-			EquippedWeapon->SetOwner(MyCharacter);
-			MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
-			
-			const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
-			if (HandSocket)
-			{
-				HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
-			}
+			HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
 		}
 	}
 	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")); }
 	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponToEquip1 is null.")) }
 }
 
-void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
+void UCombatComponent::DropWeapon(AMyWeapon* SwapWeapon1)
 {
 	if (MyCharacter && EquippedWeapon)
 	{
@@ -62,20 +56,21 @@ void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
 
 		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
-		Multicast_PlaceWeapon(SwapWeapon1);
+		Multicast_PlaceWeapon(EquippedWeapon, SwapWeapon1);
+
+		EquippedWeapon = nullptr;
 	}
 	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
 	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
 }
 
-void UCombatComponent::Multicast_PlaceWeapon_Implementation(AActor* SwapWeapon1)
+void UCombatComponent::Multicast_PlaceWeapon_Implementation(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1)
 {
-	if (EquippedWeapon)
+	if (CurrentWeapon1)
 	{
 		FTransform EquipWeaponTransform{};
 		EquipWeaponTransform = SwapWeapon1->GetActorTransform();
-		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
-		EquippedWeapon = nullptr;
+		CurrentWeapon1->SetActorTransform(EquipWeaponTransform);
 	}
-	else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Multicast_PlaceWeapon_Implementation - EquippedWeapon is null.")) }
+	else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Multicast_PlaceWeapon_Implementation - CurrentWeapon1 is null.")) }
 }
