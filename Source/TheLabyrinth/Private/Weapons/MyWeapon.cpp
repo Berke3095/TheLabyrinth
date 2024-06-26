@@ -68,6 +68,7 @@ void AMyWeapon::SetMeshes()
 		WeaponFPSMesh->SetupAttachment(RootComponent);
 		WeaponFPSMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		WeaponFPSMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		WeaponFPSMesh->bHiddenInGame = true;
 		WeaponFPSMesh->SetOnlyOwnerSee(true);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponFPSMesh is null.")); }
@@ -117,6 +118,12 @@ void AMyWeapon::SetEquippedWeaponSettings()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
+
+	if (WeaponFPSMesh)
+	{
+		WeaponFPSMesh->bHiddenInGame = false;
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponFPSMesh is null.")); }
 }
 
 void AMyWeapon::SetDroppedWeaponSettings()
@@ -132,4 +139,10 @@ void AMyWeapon::SetDroppedWeaponSettings()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - WeaponReplicatedMesh is null.")); }
+
+	if (WeaponFPSMesh)
+	{
+		WeaponFPSMesh->bHiddenInGame = true;
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - WeaponFPSMesh is null.")); }
 }

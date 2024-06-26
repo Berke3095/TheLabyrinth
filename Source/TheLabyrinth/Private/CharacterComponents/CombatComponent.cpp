@@ -36,23 +36,12 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 		EquippedWeapon->SetOwner(MyCharacter);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
 
-		/*if (const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket")))
+		if (const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket")))
 		{
 			HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
 		}
-		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - HandSocket is null.")); }*/
-
-		if (USkeletalMeshComponent* WeaponFPSMesh = MyCharacter->GetFPSMesh())
-		{
-			EquippedWeapon->GetWeaponFPSMesh()->AttachToComponent(WeaponFPSMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("Weapon_Socket"));
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponFPSMesh is null.")); }
-
-		if (USkeletalMeshComponent* ReplicatedMeshComponent = MyCharacter->GetReplicatedMesh())
-		{
-			EquippedWeapon->GetWeaponReplicatedMesh()->AttachToComponent(ReplicatedMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("Weapon_Socket"));
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - ReplicatedMeshComponent is null.")); }
+		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - HandSocket is null.")); }
+		Client_AttachWeapon(EquippedWeapon->GetWeaponFPSMesh(), MyCharacter->GetFPSMesh());
 	}
 	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")); }
 	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponToEquip1 is null.")) }
@@ -66,19 +55,8 @@ void UCombatComponent::DropWeapon(AMyWeapon* SwapWeapon1)
 		EquippedWeapon->SetOwner(nullptr);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_UnEquipped);
 
-		if (USkeletalMeshComponent* WeaponFPSMesh = MyCharacter->GetFPSMesh())
-		{
-			EquippedWeapon->GetWeaponFPSMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - WeaponFPSMesh is null.")); }
-
-		if (USkeletalMeshComponent* ReplicatedMeshComponent = MyCharacter->GetReplicatedMesh())
-		{
-			EquippedWeapon->GetWeaponReplicatedMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		}
-		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - ReplicatedMeshComponent is null.")); }
-
-		/*EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);*/
+		Client_DeAttachWeapon(EquippedWeapon->GetWeaponFPSMesh());
+		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
 		Multicast_PlaceWeapon(EquippedWeapon, SwapWeapon1);
 
@@ -86,6 +64,21 @@ void UCombatComponent::DropWeapon(AMyWeapon* SwapWeapon1)
 	}
 	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
 	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
+}
+
+void UCombatComponent::Client_AttachWeapon_Implementation(USkeletalMeshComponent* WeaponFPSMesh1, USkeletalMeshComponent* CharacterFPSMesh1)
+{
+	if (WeaponFPSMesh1 && CharacterFPSMesh1)
+	{
+		WeaponFPSMesh1->AttachToComponent(CharacterFPSMesh1, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("Weapon_Socket"));
+	}
+	else if(!WeaponFPSMesh1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Client_AttachWeapon_Implementation - WeaponFPSMesh1 is null.")); }
+	else if (!CharacterFPSMesh1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Client_AttachWeapon_Implementation - CharacterFPSMesh1 is null.")); }
+}
+
+void UCombatComponent::Client_DeAttachWeapon_Implementation(USkeletalMeshComponent* WeaponFPSMesh1)
+{
+	if(WeaponFPSMesh1) { WeaponFPSMesh1->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); }
 }
 
 void UCombatComponent::Multicast_PlaceWeapon_Implementation(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1)

@@ -218,7 +218,7 @@ void AMyCharacter::SetDefaults()
 	bReplicates = true;
 
 	SetCharacterMovement();
-	
+
 	CapsuleComponent = GetCapsuleComponent();
 	if (CapsuleComponent)
 	{
@@ -228,10 +228,8 @@ void AMyCharacter::SetDefaults()
 	}
 
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
-	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; }
+	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; SetMeshes(); }
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")); }
-
-	SetMeshes();
 
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	if (CombatComponent)

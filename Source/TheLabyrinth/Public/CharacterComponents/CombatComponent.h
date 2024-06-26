@@ -28,4 +28,8 @@ private:
 	void DropWeapon(AMyWeapon* SwapWeapon1);
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_PlaceWeapon(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1);
+	UFUNCTION(Client, Reliable)
+	void Client_AttachWeapon(USkeletalMeshComponent* CharacterFPSMesh1, USkeletalMeshComponent* WeaponFPSMesh1);
+	UFUNCTION(Client, Reliable)
+	void Client_DeAttachWeapon(USkeletalMeshComponent* WeaponFPSMesh1);
 };
