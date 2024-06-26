@@ -23,9 +23,9 @@ private:
 
 	AMyCharacter* MyCharacter{};
 	AMyWeapon* EquippedWeapon{};
-	UPROPERTY(Replicated)
 	FTransform EquipWeaponTransform{};
 
 	void EquipWeapon(AActor* WeaponToEquip1);
 	void DropWeapon(AActor* SwapWeapon1);
+	void PlaceWeapon(AActor* SwapWeapon1);
 };

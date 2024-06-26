@@ -46,7 +46,7 @@ private:
 
 public:
 
-	FORCEINLINE void SetWeaponState(EWeaponState WeaponState1) { WeaponState = WeaponState1; }
+	void SetWeaponState(EWeaponState WeaponState1);
 
 	void SetEquippedWeaponSettings();
 	void SetDroppedWeaponSettings();

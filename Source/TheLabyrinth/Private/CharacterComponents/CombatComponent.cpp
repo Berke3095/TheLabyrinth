@@ -20,12 +20,12 @@ void UCombatComponent::BeginPlay()
 void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 }
 
 void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
 }
 
 void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
@@ -37,9 +37,9 @@ void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
 		{
 			EquippedWeapon = Weapon;
 			EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
-			if (GetOwner()->HasAuthority()) { EquippedWeapon->SetEquippedWeaponSettings(); }
-			MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
 			EquippedWeapon->SetOwner(MyCharacter);
+			MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
+			
 			const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
 			if (HandSocket)
 			{
@@ -56,20 +56,23 @@ void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
 	if (MyCharacter && EquippedWeapon)
 	{
 		EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsDropped);
-		if (GetOwner()->HasAuthority()) { EquippedWeapon->SetDroppedWeaponSettings(); }
 		EquippedWeapon->SetOwner(nullptr);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_UnEquipped);
 
-		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
-		if (HandSocket)
-		{
-			EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-		}
+		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+	}
+	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
+	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
+}
+
+void UCombatComponent::PlaceWeapon(AActor* SwapWeapon1)
+{
+	if (EquippedWeapon)
+	{
 		EquipWeaponTransform = SwapWeapon1->GetActorTransform();
 		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
 		EquippedWeapon = nullptr;
 	}
-	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
-	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
+	else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::PlaceWeapon - EquippedWeapon is null.")) }
 }
 

@@ -45,10 +45,13 @@ private:
 	void HandleInteractionWidget();
 
 	UFUNCTION(Server, Reliable)
-	void ServerEquip(AActor* WeaponToEquip1);
+	void Server_EquipWeapon(AActor* WeaponToEquip1);
 
 	UFUNCTION(Server, Reliable)
-	void ServerDrop(AActor* SwapWeapon1);
+	void Server_DropWeapon(AActor* SwapWeapon1);
+
+	UFUNCTION(Server, Reliable)
+	void Server_PlaceWeapon(AActor* SwapWeapon1);
 
 	UPROPERTY(Replicated)
 	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };

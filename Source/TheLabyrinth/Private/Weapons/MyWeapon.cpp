@@ -72,6 +72,22 @@ void AMyWeapon::OnRep_WeaponState()
 	}
 }
 
+void AMyWeapon::SetWeaponState(EWeaponState WeaponState1)
+{
+	WeaponState = WeaponState1;
+	switch (WeaponState)
+	{
+	case EWeaponState::EWS_IsEquipped:
+		SetEquippedWeaponSettings();
+		break;
+	case EWeaponState::EWS_IsDropped:
+		SetDroppedWeaponSettings();
+		break;
+	default:
+		break;
+	}
+}
+
 void AMyWeapon::SetEquippedWeaponSettings()
 {
 	if (AreaSphere)

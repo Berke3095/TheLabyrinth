@@ -158,7 +158,12 @@ void AMyCharacter::HandleInteractionWidget()
 	}
 }
 
-void AMyCharacter::ServerDrop_Implementation(AActor* SwapWeapon1)
+void AMyCharacter::Server_PlaceWeapon_Implementation(AActor* SwapWeapon1)
+{
+	CombatComponent->PlaceWeapon(SwapWeapon1);
+}
+
+void AMyCharacter::Server_DropWeapon_Implementation(AActor* SwapWeapon1)
 {
 	CombatComponent->DropWeapon(SwapWeapon1);
 }
@@ -287,20 +292,21 @@ void AMyCharacter::Interact()
 			if (HasAuthority())
 			{
 				CombatComponent->DropWeapon(InteractableActor);
+				CombatComponent->PlaceWeapon(InteractableActor);
 			}
-			else { ServerDrop(InteractableActor); }
+			else { Server_DropWeapon(InteractableActor); Server_PlaceWeapon(InteractableActor); }
 		}
 
 		if (HasAuthority())
 		{
 			CombatComponent->EquipWeapon(InteractableActor);
 		}
-		else { ServerEquip(InteractableActor); }
+		else { Server_EquipWeapon(InteractableActor); }
 	}
 	else if(!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - CombatComponent is null.")); }
 }
 
-void AMyCharacter::ServerEquip_Implementation(AActor* WeaponToEquip1)
+void AMyCharacter::Server_EquipWeapon_Implementation(AActor* WeaponToEquip1)
 {
 	CombatComponent->EquipWeapon(WeaponToEquip1);
 }
