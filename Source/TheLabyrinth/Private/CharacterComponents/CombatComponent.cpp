@@ -26,6 +26,7 @@ void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(UCombatComponent, EquippedWeapon);
 }
 
 void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
@@ -61,10 +62,19 @@ void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
 
 		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
+		Multicast_PlaceWeapon(SwapWeapon1);
+	}
+	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
+	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
+}
+
+void UCombatComponent::Multicast_PlaceWeapon_Implementation(AActor* SwapWeapon1)
+{
+	if (EquippedWeapon)
+	{
+		FTransform EquipWeaponTransform{};
 		EquipWeaponTransform = SwapWeapon1->GetActorTransform();
 		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
 		EquippedWeapon = nullptr;
 	}
-	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
-	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
 }
