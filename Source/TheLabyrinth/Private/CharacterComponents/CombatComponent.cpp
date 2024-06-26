@@ -77,4 +77,5 @@ void UCombatComponent::Multicast_PlaceWeapon_Implementation(AActor* SwapWeapon1)
 		EquippedWeapon->SetActorTransform(EquipWeaponTransform);
 		EquippedWeapon = nullptr;
 	}
+	else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Multicast_PlaceWeapon_Implementation - EquippedWeapon is null.")) }
 }
