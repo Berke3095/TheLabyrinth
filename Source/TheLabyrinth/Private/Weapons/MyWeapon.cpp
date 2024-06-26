@@ -26,8 +26,6 @@ void AMyWeapon::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetim
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AMyWeapon, WeaponReplicatedMesh);
-	DOREPLIFETIME(AMyWeapon, AreaSphere);
 	DOREPLIFETIME(AMyWeapon, WeaponState);
 }
 
@@ -59,7 +57,7 @@ void AMyWeapon::SetDefaults()
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - AreaSphere is null.")); }
 }
 
-void AMyWeapon::OnRep_WeaponProperties()
+void AMyWeapon::OnRep_WeaponState()
 {
 	switch (WeaponState)
 	{
@@ -87,8 +85,6 @@ void AMyWeapon::SetEquippedWeaponSettings()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetEquippedWeaponSettings - WeaponReplicatedMesh is null.")); }
-
-	WeaponState = EWeaponState::EWS_IsEquipped;
 }
 
 void AMyWeapon::SetDroppedWeaponSettings()
@@ -104,6 +100,4 @@ void AMyWeapon::SetDroppedWeaponSettings()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDroppedWeaponSettings - WeaponReplicatedMesh is null.")); }
-
-	WeaponState = EWeaponState::EWS_IsDropped;
 }

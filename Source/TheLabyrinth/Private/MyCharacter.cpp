@@ -163,21 +163,6 @@ void AMyCharacter::ServerDrop_Implementation(AActor* SwapWeapon1)
 	CombatComponent->DropWeapon(SwapWeapon1);
 }
 
-void AMyCharacter::OnRep_CharacterState()
-{
-	switch (CharacterState)
-	{
-	case ECharacterState::ECS_Equipped:
-		CharacterState = ECharacterState::ECS_Equipped;
-		break;
-	case ECharacterState::ECS_UnEquipped:
-		CharacterState = ECharacterState::ECS_UnEquipped;
-		break;
-	default:
-		break;
-	}
-}
-
 void AMyCharacter::GetReferences()
 {
 	UWorld* World = GetWorld();

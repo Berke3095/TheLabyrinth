@@ -5,6 +5,8 @@
 
 #include "Engine/SkeletalMeshSocket.h"
 
+#include "Net/UnrealNetwork.h"
+
 UCombatComponent::UCombatComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
@@ -21,6 +23,11 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 }
 
+void UCombatComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+}
+
 void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
 {
 	if (MyCharacter && WeaponToEquip1)
@@ -30,7 +37,7 @@ void UCombatComponent::EquipWeapon(AActor* WeaponToEquip1)
 		{
 			EquippedWeapon = Weapon;
 			EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
-			EquippedWeapon->SetEquippedWeaponSettings();
+			if (GetOwner()->HasAuthority()) { EquippedWeapon->SetEquippedWeaponSettings(); }
 			MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
 			EquippedWeapon->SetOwner(MyCharacter);
 			const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
@@ -49,7 +56,7 @@ void UCombatComponent::DropWeapon(AActor* SwapWeapon1)
 	if (MyCharacter && EquippedWeapon)
 	{
 		EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsDropped);
-		EquippedWeapon->SetDroppedWeaponSettings();
+		if (GetOwner()->HasAuthority()) { EquippedWeapon->SetDroppedWeaponSettings(); }
 		EquippedWeapon->SetOwner(nullptr);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_UnEquipped);
 

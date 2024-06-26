@@ -9,10 +9,8 @@ class USphereComponent;
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
 {
-	EWS_Initial UMETA(DisplayName = "Initial State"),
-	EWS_IsEquipped UMETA(DisplayName = "IsEquipped State"),
 	EWS_IsDropped UMETA(DisplayName = "IsDropped State"),
-	EWS_NONE UMETA(DisplayName = "NONE")
+	EWS_IsEquipped UMETA(DisplayName = "IsEquipped State"),
 };
 
 UCLASS()
@@ -34,19 +32,21 @@ private:
 
 	void SetDefaults();
 
-	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_WeaponProperties)
+	UPROPERTY(EditDefaultsOnly)
 	USkeletalMeshComponent* WeaponReplicatedMesh{};
 
-	UPROPERTY(EditDefaultsOnly, ReplicatedUsing = OnRep_WeaponProperties)
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* AreaSphere{};
-	UPROPERTY(ReplicatedUsing = OnRep_WeaponProperties)
-	EWeaponState WeaponState{ EWeaponState::EWS_Initial };
+
+	UPROPERTY(ReplicatedUsing = OnRep_WeaponState)
+	EWeaponState WeaponState{ EWeaponState::EWS_IsDropped };
+
 	UFUNCTION()
-	void OnRep_WeaponProperties();
+	void OnRep_WeaponState();
 
 public:
 
-	void SetWeaponState(EWeaponState WeaponState1) { WeaponState = WeaponState1; }
+	FORCEINLINE void SetWeaponState(EWeaponState WeaponState1) { WeaponState = WeaponState1; }
 
 	void SetEquippedWeaponSettings();
 	void SetDroppedWeaponSettings();

@@ -18,7 +18,6 @@ enum class ECharacterState : uint8
 {
 	ECS_UnEquipped UMETA(DisplayName = "UnEquipped State"),
 	ECS_Equipped UMETA(DisplayName = "Equipped State"),
-	ECS_NONE UMETA(DisplayName = "NONE")
 };
 
 UCLASS()
@@ -51,10 +50,8 @@ private:
 	UFUNCTION(Server, Reliable)
 	void ServerDrop(AActor* SwapWeapon1);
 
-	UPROPERTY(ReplicatedUsing = OnRep_CharacterState)
+	UPROPERTY(Replicated)
 	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };
-	UFUNCTION()
-	void OnRep_CharacterState();
 
 	/*
 		REFERENCES
@@ -113,5 +110,5 @@ private:
 public:
 
 	FORCEINLINE USkeletalMeshComponent* GetReplicatedMesh() const { return ReplicatedMeshComponent ? ReplicatedMeshComponent : nullptr; }
-	void SetCharacterState(ECharacterState CharacterState1) { CharacterState = CharacterState1; }
+	FORCEINLINE void SetCharacterState(ECharacterState CharacterState1) { CharacterState = CharacterState1; }
 };
