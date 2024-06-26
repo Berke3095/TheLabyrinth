@@ -36,15 +36,7 @@ void AMyWeapon::SetDefaults()
 	Tags.Add("Interactable");
 	Tags.Add("Weapon");
 
-	WeaponReplicatedMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponReplicatedMesh"));
-	if (WeaponReplicatedMesh)
-	{
-		SetRootComponent(WeaponReplicatedMesh);
-		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-		WeaponReplicatedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-		WeaponReplicatedMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
-	}
-	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponReplicatedMesh is null.")); }
+	SetMeshes();
 
 	AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
 	if (AreaSphere)
@@ -55,6 +47,30 @@ void AMyWeapon::SetDefaults()
 		AreaSphere->SetCollisionResponseToChannel(ECollisionChannel::ECC_GameTraceChannel1, ECollisionResponse::ECR_Block);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - AreaSphere is null.")); }
+}
+
+void AMyWeapon::SetMeshes()
+{
+	WeaponReplicatedMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponReplicatedMesh"));
+	if (WeaponReplicatedMesh)
+	{
+		SetRootComponent(WeaponReplicatedMesh);
+		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+		WeaponReplicatedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		WeaponReplicatedMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
+		WeaponReplicatedMesh->SetOwnerNoSee(true);
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponReplicatedMesh is null.")); }
+
+	WeaponFPSMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("WeaponFPSMesh"));
+	if (WeaponFPSMesh)
+	{
+		WeaponFPSMesh->SetupAttachment(RootComponent);
+		WeaponFPSMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		WeaponFPSMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		WeaponFPSMesh->SetOnlyOwnerSee(true);
+	}
+	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponFPSMesh is null.")); }
 }
 
 void AMyWeapon::OnRep_WeaponState()

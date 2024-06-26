@@ -36,6 +36,11 @@ private:
 	USkeletalMeshComponent* WeaponReplicatedMesh{};
 
 	UPROPERTY(EditDefaultsOnly)
+	USkeletalMeshComponent* WeaponFPSMesh{};
+
+	void SetMeshes();
+
+	UPROPERTY(EditDefaultsOnly)
 	USphereComponent* AreaSphere{};
 
 	UPROPERTY(ReplicatedUsing = OnRep_WeaponState)
@@ -50,4 +55,7 @@ public:
 
 	void SetEquippedWeaponSettings();
 	void SetDroppedWeaponSettings();
+
+	FORCEINLINE USkeletalMeshComponent* GetWeaponReplicatedMesh() const { return WeaponReplicatedMesh ? WeaponReplicatedMesh : nullptr; }
+	FORCEINLINE USkeletalMeshComponent* GetWeaponFPSMesh() const { return WeaponFPSMesh ? WeaponFPSMesh : nullptr; }
 };

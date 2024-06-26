@@ -50,8 +50,10 @@ private:
 	UFUNCTION(Server, Reliable)
 	void Server_DropWeapon(AMyWeapon* SwapWeapon1);
 
-	UPROPERTY(Replicated)
+	UPROPERTY(ReplicatedUsing = OnRep_CharacterState)
 	ECharacterState CharacterState{ ECharacterState::ECS_UnEquipped };
+	UFUNCTION()
+	void OnRep_CharacterState();
 
 	/*
 		REFERENCES
@@ -110,5 +112,6 @@ private:
 public:
 
 	FORCEINLINE USkeletalMeshComponent* GetReplicatedMesh() const { return ReplicatedMeshComponent ? ReplicatedMeshComponent : nullptr; }
-	FORCEINLINE void SetCharacterState(ECharacterState CharacterState1) { CharacterState = CharacterState1; }
+	FORCEINLINE USkeletalMeshComponent* GetFPSMesh() const { return FPSMeshComponent ? FPSMeshComponent : nullptr; }
+	void SetCharacterState(ECharacterState CharacterState1);
 };

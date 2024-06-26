@@ -163,6 +163,21 @@ void AMyCharacter::Server_DropWeapon_Implementation(AMyWeapon* SwapWeapon1)
 	CombatComponent->DropWeapon(SwapWeapon1);
 }
 
+void AMyCharacter::OnRep_CharacterState()
+{
+	switch (CharacterState)
+	{
+	case ECharacterState::ECS_Equipped:
+		FPSMeshComponent->SetOwnerNoSee(false);
+		break;
+	case ECharacterState::ECS_UnEquipped:
+		FPSMeshComponent->SetOwnerNoSee(true);
+		break;
+	default:
+		break;
+	}
+}
+
 void AMyCharacter::GetReferences()
 {
 	UWorld* World = GetWorld();
@@ -179,7 +194,7 @@ void AMyCharacter::SetMeshes()
 	{
 		FPSMeshComponent->SetOnlyOwnerSee(true);
 		FPSMeshComponent->SetOwnerNoSee(true);
-		FPSMeshComponent->SetupAttachment(RootComponent);
+		FPSMeshComponent->SetupAttachment(Camera);
 		FPSMeshComponent->CastShadow = false;
 		FPSMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		FPSMeshComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
@@ -203,8 +218,7 @@ void AMyCharacter::SetDefaults()
 	bReplicates = true;
 
 	SetCharacterMovement();
-	SetMeshes();
-
+	
 	CapsuleComponent = GetCapsuleComponent();
 	if (CapsuleComponent)
 	{
@@ -216,6 +230,8 @@ void AMyCharacter::SetDefaults()
 	Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
 	if (Camera) { Camera->SetupAttachment(RootComponent); Camera->FieldOfView = 90.0f; }
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetDefaults - Camera is null.")); }
+
+	SetMeshes();
 
 	CombatComponent = CreateDefaultSubobject<UCombatComponent>(TEXT("CombatComponent"));
 	if (CombatComponent)
@@ -302,6 +318,22 @@ void AMyCharacter::Interact()
 		}
 	}
 	else if(!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - CombatComponent is null.")); }
+}
+
+void AMyCharacter::SetCharacterState(ECharacterState CharacterState1)
+{
+	CharacterState = CharacterState1;
+	switch (CharacterState)
+	{
+	case ECharacterState::ECS_Equipped:
+		FPSMeshComponent->SetOwnerNoSee(false);
+		break;
+	case ECharacterState::ECS_UnEquipped:
+		FPSMeshComponent->SetOwnerNoSee(true);
+		break;
+	default:
+		break;
+	}
 }
 
 void AMyCharacter::Server_EquipWeapon_Implementation(AMyWeapon* WeaponToEquip1)

@@ -36,11 +36,23 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 		EquippedWeapon->SetOwner(MyCharacter);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
 
-		const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket"));
-		if (HandSocket)
+		/*if (const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket")))
 		{
 			HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
 		}
+		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - HandSocket is null.")); }*/
+
+		if (USkeletalMeshComponent* WeaponFPSMesh = MyCharacter->GetFPSMesh())
+		{
+			EquippedWeapon->GetWeaponFPSMesh()->AttachToComponent(WeaponFPSMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("Weapon_Socket"));
+		}
+		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponFPSMesh is null.")); }
+
+		if (USkeletalMeshComponent* ReplicatedMeshComponent = MyCharacter->GetReplicatedMesh())
+		{
+			EquippedWeapon->GetWeaponReplicatedMesh()->AttachToComponent(ReplicatedMeshComponent, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("Weapon_Socket"));
+		}
+		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - ReplicatedMeshComponent is null.")); }
 	}
 	else if(!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - MyCharacter is null.")); }
 	else if(!WeaponToEquip1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::EquipWeapon - WeaponToEquip1 is null.")) }
@@ -54,7 +66,19 @@ void UCombatComponent::DropWeapon(AMyWeapon* SwapWeapon1)
 		EquippedWeapon->SetOwner(nullptr);
 		MyCharacter->SetCharacterState(ECharacterState::ECS_UnEquipped);
 
-		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+		if (USkeletalMeshComponent* WeaponFPSMesh = MyCharacter->GetFPSMesh())
+		{
+			EquippedWeapon->GetWeaponFPSMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		}
+		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - WeaponFPSMesh is null.")); }
+
+		if (USkeletalMeshComponent* ReplicatedMeshComponent = MyCharacter->GetReplicatedMesh())
+		{
+			EquippedWeapon->GetWeaponReplicatedMesh()->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		}
+		else { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - ReplicatedMeshComponent is null.")); }
+
+		/*EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);*/
 
 		Multicast_PlaceWeapon(EquippedWeapon, SwapWeapon1);
 
