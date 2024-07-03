@@ -68,6 +68,7 @@ void AMyWeapon::SetMeshes()
 		WeaponFPSMesh->SetupAttachment(RootComponent);
 		WeaponFPSMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		WeaponFPSMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+		WeaponFPSMesh->CastShadow = false;
 		WeaponFPSMesh->bHiddenInGame = true;
 		WeaponFPSMesh->SetOnlyOwnerSee(true);
 	}
