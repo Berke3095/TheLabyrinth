@@ -27,7 +27,9 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 		EquippedWeapon = WeaponToEquip1;
 		EquippedWeapon->SetWeaponState(EWeaponState::EWS_IsEquipped);
 		EquippedWeapon->SetOwner(MyCharacter);
-		MyCharacter->SetCharacterState(ECharacterState::ECS_Equipped);
+
+		if (EquippedWeapon->ActorHasTag("Rifle")) { MyCharacter->SetCharacterState(ECharacterState::ECS_EquippedRifle); }
+		else if(EquippedWeapon->ActorHasTag("Shotgun")) { MyCharacter->SetCharacterState(ECharacterState::ECS_EquippedShotgun); }
 
 		if (const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket")))
 		{

@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "CharacterStates.h"
 #include "MyCharacter.generated.h"
 
 class UInteractionWidget;
@@ -12,13 +13,6 @@ class UCombatComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
-
-UENUM(BlueprintType)
-enum class ECharacterState : uint8
-{
-	ECS_UnEquipped UMETA(DisplayName = "UnEquipped State"),
-	ECS_Equipped UMETA(DisplayName = "Equipped State"),
-};
 
 UCLASS()
 class THELABYRINTH_API AMyCharacter : public ACharacter
@@ -113,5 +107,7 @@ public:
 
 	FORCEINLINE USkeletalMeshComponent* GetReplicatedMesh() const { return ReplicatedMeshComponent ? ReplicatedMeshComponent : nullptr; }
 	FORCEINLINE USkeletalMeshComponent* GetFPSMesh() const { return FPSMeshComponent ? FPSMeshComponent : nullptr; }
+
 	void SetCharacterState(ECharacterState CharacterState1);
+	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
 };

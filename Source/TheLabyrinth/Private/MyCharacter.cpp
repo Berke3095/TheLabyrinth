@@ -127,12 +127,10 @@ void AMyCharacter::HandleInteractionWidget()
 					else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
 					InteractionWidget->AddToViewport();
 					break;
-				case ECharacterState::ECS_Equipped:
+				default:
 					if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Rifle"); }
 					else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Shotgun"); }
 					InteractionWidget->AddToViewport();
-					break;
-				default:
 					break;
 				}
 				
@@ -148,11 +146,9 @@ void AMyCharacter::HandleInteractionWidget()
 			if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Rifle"); }
 			else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Pickup Shotgun"); }
 			break;
-		case ECharacterState::ECS_Equipped:
+		default:
 			if (InteractableActor->ActorHasTag("Rifle")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Rifle"); }
 			else if (InteractableActor->ActorHasTag("Shotgun")) { InteractionWidget->SetText(InteractionWidget->GetInteractionText(), "E - Swap with Shotgun"); }
-			break;
-		default:
 			break;
 		}
 	}
@@ -167,13 +163,11 @@ void AMyCharacter::OnRep_CharacterState()
 {
 	switch (CharacterState)
 	{
-	case ECharacterState::ECS_Equipped:
-		FPSMeshComponent->SetOwnerNoSee(false);
-		break;
 	case ECharacterState::ECS_UnEquipped:
 		FPSMeshComponent->SetOwnerNoSee(true);
 		break;
 	default:
+		FPSMeshComponent->SetOwnerNoSee(false);
 		break;
 	}
 }
@@ -299,7 +293,7 @@ void AMyCharacter::Interact()
 		AMyWeapon* Weapon = Cast<AMyWeapon>(InteractableActor);
 		if (Weapon)
 		{
-			if (CharacterState == ECharacterState::ECS_Equipped)
+			if (CharacterState != ECharacterState::ECS_UnEquipped)
 			{
 				if (HasAuthority())
 				{
@@ -323,13 +317,11 @@ void AMyCharacter::SetCharacterState(ECharacterState CharacterState1)
 	CharacterState = CharacterState1;
 	switch (CharacterState)
 	{
-	case ECharacterState::ECS_Equipped:
-		FPSMeshComponent->SetOwnerNoSee(false);
-		break;
 	case ECharacterState::ECS_UnEquipped:
 		FPSMeshComponent->SetOwnerNoSee(true);
 		break;
 	default:
+		FPSMeshComponent->SetOwnerNoSee(false);
 		break;
 	}
 }

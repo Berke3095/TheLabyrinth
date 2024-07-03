@@ -28,6 +28,8 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		CharacterDirection = UKismetAnimationLibrary::CalculateDirection(CharacterMovement->Velocity, MyCharacter->GetActorRotation());
 
 		Speed = UKismetMathLibrary::VSizeXY(CharacterMovement->Velocity);
+
+		CharacterState = MyCharacter->GetCharacterState();
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("UMyAnimInstance::NativeUpdateAnimation - CharacterMovement is null.")); }
 }

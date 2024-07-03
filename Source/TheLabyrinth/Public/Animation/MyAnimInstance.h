@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Animation/AnimInstance.h"
+#include "CharacterStates.h"
 #include "MyAnimInstance.generated.h"
 
 class AMyCharacter;
@@ -30,4 +31,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float CharacterDirection{};
+
+	UPROPERTY(BlueprintReadOnly)
+	ECharacterState CharacterState{};
 };
