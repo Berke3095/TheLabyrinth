@@ -31,7 +31,7 @@ void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
 		if (EquippedWeapon->ActorHasTag("Rifle")) { MyCharacter->SetCharacterState(ECharacterState::ECS_EquippedRifle); }
 		else if(EquippedWeapon->ActorHasTag("Shotgun")) { MyCharacter->SetCharacterState(ECharacterState::ECS_EquippedShotgun); }
 
-		if (const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Weapon_Socket")))
+		if (const USkeletalMeshSocket* HandSocket = MyCharacter->GetReplicatedMesh()->GetSocketByName(FName("Replicated_Weapon_Socket")))
 		{
 			HandSocket->AttachActor(EquippedWeapon, MyCharacter->GetReplicatedMesh());
 		}
@@ -65,7 +65,7 @@ void UCombatComponent::Client_AttachWeapon_Implementation(USkeletalMeshComponent
 {
 	if (WeaponFPSMesh1 && CharacterFPSMesh1)
 	{
-		WeaponFPSMesh1->AttachToComponent(CharacterFPSMesh1, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("Weapon_Socket"));
+		WeaponFPSMesh1->AttachToComponent(CharacterFPSMesh1, FAttachmentTransformRules::SnapToTargetIncludingScale, FName("FPS_Weapon_Socket"));
 	}
 	else if(!WeaponFPSMesh1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Client_AttachWeapon_Implementation - WeaponFPSMesh1 is null.")); }
 	else if (!CharacterFPSMesh1) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::Client_AttachWeapon_Implementation - CharacterFPSMesh1 is null.")); }
