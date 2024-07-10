@@ -80,7 +80,8 @@ void AMyCharacter::EyeTrace()
 		FVector2D ScreenLocation(ViewportSizeX / 2.0f, ViewportSizeY / 2.0f);
 
 		FVector WorldLocation{}, WorldDirection{};
-		if (PlayerController->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection))
+		bool bScreenToWorld = PlayerController->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection);
+		if (bScreenToWorld)
 		{
 			FVector End = WorldLocation + (WorldDirection * 140.0f);
 			FHitResult HitResult{};
@@ -88,7 +89,7 @@ void AMyCharacter::EyeTrace()
 			FCollisionQueryParams CollisionParams{};
 			CollisionParams.AddIgnoredActor(this);
 
-			DrawDebugLine(GetWorld(), WorldLocation, End, FColor::Red, false, -1.0f, 0.0f, 0.1f);
+			// DrawDebugLine(GetWorld(), WorldLocation, End, FColor::Red, false, -1.0f, 0.0f, 0.1f);
 
 			bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, WorldLocation, End, ECC_GameTraceChannel1, CollisionParams);
 

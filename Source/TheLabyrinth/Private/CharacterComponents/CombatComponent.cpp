@@ -4,10 +4,13 @@
 #include "MyCharacter.h"
 
 #include "Engine/SkeletalMeshSocket.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+#include "Kismet/KismetMathLibrary.h"
 
 UCombatComponent::UCombatComponent()
 {
-	PrimaryComponentTick.bCanEverTick = false;
+	PrimaryComponentTick.bCanEverTick = true;
 }
 
 void UCombatComponent::BeginPlay()
@@ -18,6 +21,8 @@ void UCombatComponent::BeginPlay()
 void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	BulletTrace();
 }
 
 void UCombatComponent::EquipWeapon(AMyWeapon* WeaponToEquip1)
@@ -59,6 +64,56 @@ void UCombatComponent::DropWeapon(AMyWeapon* SwapWeapon1)
 	}
 	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
 	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
+}
+
+void UCombatComponent::BulletTrace()
+{
+	if (MyCharacter->IsLocallyControlled() && MyCharacter->GetPlayerController())
+	{
+		int32 ViewportSizeX{}, ViewportSizeY{};
+		MyCharacter->GetPlayerController()->GetViewportSize(ViewportSizeX, ViewportSizeY);
+		FVector2D ScreenLocation(ViewportSizeX / 2.0f, ViewportSizeY / 2.0f);
+
+		float BulletSpread{};
+		float RandomPitch{};
+		float RandomYaw{};
+
+		UCharacterMovementComponent* MyCharacterMovement = MyCharacter->GetCharacterMovement();
+		float GroundSpeed = UKismetMathLibrary::VSizeXY(MyCharacterMovement->Velocity);
+
+		if (GroundSpeed > 0) { BulletSpread = 1.5f; }
+		else { BulletSpread = 0.5f; }
+		
+		RandomPitch = FMath::RandRange(-BulletSpread, BulletSpread);
+		RandomYaw = FMath::RandRange(-BulletSpread, BulletSpread);
+
+		FVector WorldLocation{}, WorldDirection{};
+		bool bScreenToWorld = MyCharacter->GetPlayerController()->DeprojectScreenPositionToWorld(ScreenLocation.X, ScreenLocation.Y, WorldLocation, WorldDirection);
+		if (bScreenToWorld)
+		{
+			WorldDirection = FQuat(WorldDirection.Rotation() + FRotator(RandomPitch, RandomYaw, 0.0f)).Vector();
+
+			FVector End = WorldLocation + (WorldDirection * BulletTraceLength);
+			FHitResult HitResult{};
+
+			FCollisionQueryParams CollisionParams{};
+			CollisionParams.AddIgnoredActor(GetOwner());
+
+			bool bHit = GetWorld()->LineTraceSingleByChannel(HitResult, WorldLocation, End, ECC_GameTraceChannel2, CollisionParams); // Bullet trace 
+
+			if (bHit)
+			{
+				DrawDebugSphere(
+					GetWorld(),
+					HitResult.ImpactPoint,
+					12.0f,
+					12,
+					FColor::Red
+				);
+			}
+		}
+	}
+	else if (!MyCharacter->GetPlayerController()) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::BulletTrace - PlayerController is null.")); }
 }
 
 void UCombatComponent::Client_AttachWeapon_Implementation(USkeletalMeshComponent* WeaponFPSMesh1, USkeletalMeshComponent* CharacterFPSMesh1)

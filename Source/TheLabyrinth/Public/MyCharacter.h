@@ -110,4 +110,6 @@ public:
 
 	void SetCharacterState(ECharacterState CharacterState1);
 	FORCEINLINE ECharacterState GetCharacterState() const { return CharacterState; }
+
+	FORCEINLINE APlayerController* GetPlayerController() const { return PlayerController ? PlayerController : nullptr; }
 };

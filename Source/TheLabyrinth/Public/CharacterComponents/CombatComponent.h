@@ -31,4 +31,7 @@ private:
 	void Client_AttachWeapon(USkeletalMeshComponent* CharacterFPSMesh1, USkeletalMeshComponent* WeaponFPSMesh1);
 	UFUNCTION(Client, Reliable)
 	void Client_DeAttachWeapon(USkeletalMeshComponent* WeaponFPSMesh1);
+
+	const float BulletTraceLength{ 50000.0f };
+	void BulletTrace();
 };
