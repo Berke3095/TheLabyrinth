@@ -32,6 +32,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Movement")
 	float CharacterDirection{};
 
+	UPROPERTY(BlueprintReadOnly, Category = "Movement")
+	float CharacterPitchRotation{};
+
 	UPROPERTY(BlueprintReadOnly)
 	ECharacterState CharacterState{};
 };

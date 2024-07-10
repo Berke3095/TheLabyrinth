@@ -30,6 +30,18 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaTime)
 		Speed = UKismetMathLibrary::VSizeXY(CharacterMovement->Velocity);
 
 		CharacterState = MyCharacter->GetCharacterState();
+
+		FRotator AimRotation = MyCharacter->GetBaseAimRotation();
+		CharacterPitchRotation = AimRotation.Pitch;
+
+		if (CharacterPitchRotation > 90.0f && !MyCharacter->IsLocallyControlled())
+		{
+			FVector2D ToConvert(270.0f, 360.0f);
+			FVector2D ConvertTo(-90.0f, 0.0f);
+			CharacterPitchRotation = FMath::GetMappedRangeValueClamped(ToConvert, ConvertTo, CharacterPitchRotation);
+		}
+
+		UE_LOG(LogTemp, Warning, TEXT("CharacterPitchRotation is %f"), CharacterPitchRotation);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("UMyAnimInstance::NativeUpdateAnimation - CharacterMovement is null.")); }
 }
