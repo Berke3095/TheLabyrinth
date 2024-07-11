@@ -14,6 +14,9 @@ class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
 
+class UMyAnimInstance;
+class UAnimMontage;
+
 UCLASS()
 class THELABYRINTH_API AMyCharacter : public ACharacter
 {
@@ -53,6 +56,7 @@ private:
 		REFERENCES
 	*/
 	APlayerController* PlayerController{};
+	UMyAnimInstance* ReplicatedAnimInstance{};
 
 	void GetReferences();
 
@@ -95,6 +99,19 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
 	UInputAction* InteractAction{};
 	void Interact();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
+	UInputAction* FireAction{};
+	void FireWeapon();
+
+	/*
+		MONTAGES
+	*/
+	void PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* MontageToPlay1);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* ReplicatedFireAnimMontage{};
+	
 
 	/*
 		WIDGETS

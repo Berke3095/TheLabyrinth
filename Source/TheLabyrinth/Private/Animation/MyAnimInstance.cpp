@@ -40,8 +40,6 @@ void UMyAnimInstance::NativeUpdateAnimation(float DeltaTime)
 			FVector2D ConvertTo(-90.0f, 0.0f);
 			CharacterPitchRotation = FMath::GetMappedRangeValueClamped(ToConvert, ConvertTo, CharacterPitchRotation);
 		}
-
-		UE_LOG(LogTemp, Warning, TEXT("CharacterPitchRotation is %f"), CharacterPitchRotation);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("UMyAnimInstance::NativeUpdateAnimation - CharacterMovement is null.")); }
 }

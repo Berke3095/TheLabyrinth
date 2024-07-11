@@ -8,6 +8,9 @@
 #include "Components/CapsuleComponent.h"
 #include "CharacterComponents/CombatComponent.h"
 
+#include "Animation/MyAnimInstance.h" 
+#include "Animation/AnimMontage.h"
+
 #include "Widgets/InteractionWidget.h"
 
 #include "Net/UnrealNetwork.h"
@@ -50,6 +53,9 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 		if (InteractAction) { EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &AMyCharacter::Interact); }
 		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - InteractAction is null.")); }
+
+		if (FireAction) { EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyCharacter::FireWeapon); }
+		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - FireAction is null.")); }
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - EnhancedInputComponent is null.")); }
 }
@@ -180,6 +186,9 @@ void AMyCharacter::GetReferences()
 	{
 		PlayerController = World->GetFirstPlayerController();
 	}
+
+	ReplicatedAnimInstance = Cast<UMyAnimInstance>(ReplicatedMeshComponent->GetAnimInstance());
+	if(!ReplicatedAnimInstance) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::GetReferences - ReplicatedAnimInstance is null.")); }
 }
 
 void AMyCharacter::SetMeshes()
@@ -199,7 +208,7 @@ void AMyCharacter::SetMeshes()
 	ReplicatedMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ReplicatedMeshComponent"));
 	if (ReplicatedMeshComponent)
 	{
-		ReplicatedMeshComponent->SetOwnerNoSee(true);
+		ReplicatedMeshComponent->SetOwnerNoSee(false);
 		ReplicatedMeshComponent->SetupAttachment(RootComponent);
 		ReplicatedMeshComponent->CastShadow = true;
 		ReplicatedMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
@@ -311,6 +320,34 @@ void AMyCharacter::Interact()
 		}
 	}
 	else if(!CombatComponent) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::Interact - CombatComponent is null.")); }
+}
+
+void AMyCharacter::FireWeapon()
+{
+	if (CharacterState != ECharacterState::ECS_UnEquipped)
+	{
+		PlayFireMontage(ReplicatedAnimInstance, ReplicatedFireAnimMontage);
+	}
+}
+
+void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* MontageToPlay1)
+{
+	if (AnimInstance1 && MontageToPlay1 && !AnimInstance1->Montage_IsPlaying(MontageToPlay1))
+	{
+		FName SectionName{};
+		switch (CharacterState)
+		{
+		case ECharacterState::ECS_EquippedRifle:
+			SectionName = FName("Fire_Rifle");
+			break;
+		default:
+			break;
+		}
+
+		AnimInstance1->Montage_Play(MontageToPlay1);
+		AnimInstance1->Montage_JumpToSection(SectionName, MontageToPlay1);
+	}
+	else if (!MontageToPlay1) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::PlayFireMontage - MontageToPlay1 is null.")); }
 }
 
 void AMyCharacter::SetCharacterState(ECharacterState CharacterState1)
