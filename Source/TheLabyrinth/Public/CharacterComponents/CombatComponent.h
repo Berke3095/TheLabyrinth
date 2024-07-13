@@ -25,6 +25,8 @@ private:
 
 	void EquipWeapon(AMyWeapon* WeaponToEquip1);
 	void DropWeapon(AMyWeapon* SwapWeapon1);
+	UFUNCTION(Server, Reliable)
+	void Server_PlaceWeapon(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1);
 	UFUNCTION(NetMulticast, Reliable)
 	void Multicast_PlaceWeapon(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1);
 	UFUNCTION(Client, Reliable)

@@ -58,12 +58,17 @@ void UCombatComponent::DropWeapon(AMyWeapon* SwapWeapon1)
 		Client_DeAttachWeapon(EquippedWeapon->GetWeaponFPSMesh());
 		EquippedWeapon->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 
-		Multicast_PlaceWeapon(EquippedWeapon, SwapWeapon1);
+		Server_PlaceWeapon(EquippedWeapon, SwapWeapon1);
 
 		EquippedWeapon = nullptr;
 	}
 	else if (!MyCharacter) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - MyCharacter is null.")); }
 	else if (!EquippedWeapon) { UE_LOG(LogTemp, Warning, TEXT("UCombatComponent::DropWeapon - EquippedWeapon is null.")) }
+}
+
+void UCombatComponent::Server_PlaceWeapon_Implementation(AMyWeapon* CurrentWeapon1, AMyWeapon* SwapWeapon1)
+{
+	Multicast_PlaceWeapon(CurrentWeapon1, SwapWeapon1);
 }
 
 void UCombatComponent::BulletTrace()
