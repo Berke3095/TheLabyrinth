@@ -324,10 +324,20 @@ void AMyCharacter::Interact()
 
 void AMyCharacter::FireWeapon()
 {
+	Server_FireWeapon();
+}
+
+void AMyCharacter::Multicast_FireWeapon_Implementation()
+{
 	if (CharacterState != ECharacterState::ECS_UnEquipped)
 	{
 		PlayFireMontage(ReplicatedAnimInstance, ReplicatedFireAnimMontage);
 	}
+}
+
+void AMyCharacter::Server_FireWeapon_Implementation()
+{
+	Multicast_FireWeapon();
 }
 
 void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* MontageToPlay1)

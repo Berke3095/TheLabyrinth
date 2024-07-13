@@ -103,6 +103,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Inputs")
 	UInputAction* FireAction{};
 	void FireWeapon();
+	UFUNCTION(Server, Reliable)
+	void Server_FireWeapon();
+	UFUNCTION(NetMulticast, Reliable)
+	void Multicast_FireWeapon();
 
 	/*
 		MONTAGES
