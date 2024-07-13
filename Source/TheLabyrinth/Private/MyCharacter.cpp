@@ -208,7 +208,7 @@ void AMyCharacter::SetMeshes()
 	ReplicatedMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ReplicatedMeshComponent"));
 	if (ReplicatedMeshComponent)
 	{
-		ReplicatedMeshComponent->SetOwnerNoSee(false);
+		ReplicatedMeshComponent->SetOwnerNoSee(true);
 		ReplicatedMeshComponent->SetupAttachment(RootComponent);
 		ReplicatedMeshComponent->CastShadow = true;
 		ReplicatedMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);

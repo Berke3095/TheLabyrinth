@@ -58,7 +58,7 @@ void AMyWeapon::SetMeshes()
 		WeaponReplicatedMesh->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 		WeaponReplicatedMesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 		WeaponReplicatedMesh->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldStatic, ECollisionResponse::ECR_Block);
-		WeaponReplicatedMesh->SetOwnerNoSee(false);
+		WeaponReplicatedMesh->SetOwnerNoSee(true);
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyWeapon::SetDefaults - WeaponReplicatedMesh is null.")); }
 
