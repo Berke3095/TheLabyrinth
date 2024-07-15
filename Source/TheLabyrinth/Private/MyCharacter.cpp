@@ -54,7 +54,8 @@ void AMyCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 		if (InteractAction) { EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &AMyCharacter::Interact); }
 		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - InteractAction is null.")); }
 
-		if (FireAction) { EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyCharacter::FireWeapon); }
+		if (FireAction) 
+		{ EnhancedInputComponent->BindAction(FireAction, ETriggerEvent::Triggered, this, &AMyCharacter::FireWeapon); }
 		else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - FireAction is null.")); }
 	}
 	else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::SetupPlayerInputComponent - EnhancedInputComponent is null.")); }
@@ -140,7 +141,6 @@ void AMyCharacter::HandleInteractionWidget()
 					InteractionWidget->AddToViewport();
 					break;
 				}
-				
 			}
 			else { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::HandleInteractionWidget - InteractionWidget is null.")); }
 		}
@@ -327,8 +327,11 @@ void AMyCharacter::Interact()
 
 void AMyCharacter::FireWeapon()
 {
-	Server_FireWeapon();
-	PlayFireMontage(FPSAnimInstance, FPSFireAnimMontage);
+	if (CharacterState != ECharacterState::ECS_UnEquipped)
+	{
+		Server_FireWeapon();
+		PlayFireMontage(FPSAnimInstance, FPSFireAnimMontage);
+	}
 }
 
 void AMyCharacter::Multicast_FireWeapon_Implementation()
@@ -364,16 +367,14 @@ void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* M
 			AMyWeapon* CurrentWeapon = CombatComponent->EquippedWeapon;
 			if (CurrentWeapon)
 			{
-				/*if (IsLocallyControlled())
+				if (IsLocallyControlled())
 				{
-					CurrentWeapon->Fire(CurrentWeapon->GetWeaponFPSMesh());
+					CurrentWeapon->FireFPS(CurrentWeapon->GetWeaponFPSMesh());
 				}
 				else
 				{
 					CurrentWeapon->Fire(CurrentWeapon->GetWeaponReplicatedMesh());
-				}*/
-
-				CurrentWeapon->Fire(CurrentWeapon->GetWeaponFPSMesh());
+				}
 			}
 		}
 		AnimInstance1->Montage_JumpToSection(SectionName, MontageToPlay1);

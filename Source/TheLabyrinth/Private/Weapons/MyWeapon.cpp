@@ -96,7 +96,27 @@ void AMyWeapon::Fire(USkeletalMeshComponent* WeaponMesh1)
 {
 	if (FireAnimation && WeaponMesh1)
 	{
-		WeaponMesh1->PlayAnimation(FireAnimation, false);
+		if (FireAnimation && WeaponMesh1)
+		{
+			if (!WeaponMesh1->IsPlaying())
+			{
+				WeaponMesh1->PlayAnimation(FireAnimation, false);
+			}
+		}
+	}
+}
+
+void AMyWeapon::FireFPS(USkeletalMeshComponent* WeaponMesh1)
+{
+	if (FireAnimation && WeaponMesh1)
+	{
+		if (FireAnimation && WeaponMesh1)
+		{
+			if (!WeaponMesh1->IsPlaying())
+			{
+				WeaponMesh1->PlayAnimation(FireAnimationFPS, false);
+			}
+		}
 	}
 }
 
