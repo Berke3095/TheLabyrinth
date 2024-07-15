@@ -57,6 +57,7 @@ private:
 	*/
 	APlayerController* PlayerController{};
 	UMyAnimInstance* ReplicatedAnimInstance{};
+	UMyAnimInstance* FPSAnimInstance{};
 
 	void GetReferences();
 
@@ -115,6 +116,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* ReplicatedFireAnimMontage{};
+
+	UPROPERTY(EditDefaultsOnly, Category = "Montages")
+	UAnimMontage* FPSFireAnimMontage{};
 	
 
 	/*

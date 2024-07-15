@@ -189,6 +189,9 @@ void AMyCharacter::GetReferences()
 
 	ReplicatedAnimInstance = Cast<UMyAnimInstance>(ReplicatedMeshComponent->GetAnimInstance());
 	if(!ReplicatedAnimInstance) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::GetReferences - ReplicatedAnimInstance is null.")); }
+
+	FPSAnimInstance = Cast<UMyAnimInstance>(FPSMeshComponent->GetAnimInstance());
+	if (!FPSAnimInstance) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::GetReferences - FPSAnimInstance is null.")); }
 }
 
 void AMyCharacter::SetMeshes()
@@ -325,6 +328,7 @@ void AMyCharacter::Interact()
 void AMyCharacter::FireWeapon()
 {
 	Server_FireWeapon();
+	PlayFireMontage(FPSAnimInstance, FPSFireAnimMontage);
 }
 
 void AMyCharacter::Multicast_FireWeapon_Implementation()
