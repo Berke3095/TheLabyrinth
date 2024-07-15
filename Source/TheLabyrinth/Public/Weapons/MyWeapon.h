@@ -52,8 +52,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Animations")
 	UAnimationAsset* FireAnimation{};
-	UPROPERTY(EditDefaultsOnly, Category = "Animations")
-	UAnimationAsset* FireAnimationFPS{};
 
 public:
 
@@ -66,5 +64,4 @@ public:
 	FORCEINLINE USkeletalMeshComponent* GetWeaponFPSMesh() const { return WeaponFPSMesh ? WeaponFPSMesh : nullptr; }
 
 	void Fire(USkeletalMeshComponent* WeaponMesh1);
-	void FireFPS(USkeletalMeshComponent* WeaponMesh1);
 };

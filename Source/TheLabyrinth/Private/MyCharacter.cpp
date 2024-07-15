@@ -369,7 +369,7 @@ void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* M
 			{
 				if (IsLocallyControlled())
 				{
-					CurrentWeapon->FireFPS(CurrentWeapon->GetWeaponFPSMesh());
+					CurrentWeapon->Fire(CurrentWeapon->GetWeaponFPSMesh());
 				}
 				else
 				{

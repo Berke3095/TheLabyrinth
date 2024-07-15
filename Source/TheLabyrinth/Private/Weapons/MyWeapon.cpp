@@ -106,20 +106,6 @@ void AMyWeapon::Fire(USkeletalMeshComponent* WeaponMesh1)
 	}
 }
 
-void AMyWeapon::FireFPS(USkeletalMeshComponent* WeaponMesh1)
-{
-	if (FireAnimation && WeaponMesh1)
-	{
-		if (FireAnimation && WeaponMesh1)
-		{
-			if (!WeaponMesh1->IsPlaying())
-			{
-				WeaponMesh1->PlayAnimation(FireAnimationFPS, false);
-			}
-		}
-	}
-}
-
 void AMyWeapon::SetWeaponState(EWeaponState WeaponState1)
 {
 	WeaponState = WeaponState1;
