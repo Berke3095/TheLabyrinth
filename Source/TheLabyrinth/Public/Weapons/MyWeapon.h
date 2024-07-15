@@ -5,6 +5,7 @@
 #include "MyWeapon.generated.h"
 
 class USphereComponent;
+class UAnimationAsset;
 
 UENUM(BlueprintType)
 enum class EWeaponState : uint8
@@ -49,6 +50,9 @@ private:
 	UFUNCTION()
 	void OnRep_WeaponState();
 
+	UPROPERTY(EditDefaultsOnly, Category = "Animations")
+	UAnimationAsset* FireAnimation{};
+
 public:
 
 	void SetWeaponState(EWeaponState WeaponState1);
@@ -58,4 +62,6 @@ public:
 
 	FORCEINLINE USkeletalMeshComponent* GetWeaponReplicatedMesh() const { return WeaponReplicatedMesh ? WeaponReplicatedMesh : nullptr; }
 	FORCEINLINE USkeletalMeshComponent* GetWeaponFPSMesh() const { return WeaponFPSMesh ? WeaponFPSMesh : nullptr; }
+
+	void Fire(USkeletalMeshComponent* WeaponMesh1);
 };

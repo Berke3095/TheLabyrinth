@@ -4,6 +4,8 @@
 
 #include "Net/UnrealNetwork.h"
 
+#include "Animation/AnimationAsset.h"
+
 AMyWeapon::AMyWeapon()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -87,6 +89,14 @@ void AMyWeapon::OnRep_WeaponState()
 		break;
 	default:
 		break;
+	}
+}
+
+void AMyWeapon::Fire(USkeletalMeshComponent* WeaponMesh1)
+{
+	if (FireAnimation && WeaponMesh1)
+	{
+		WeaponMesh1->PlayAnimation(FireAnimation, false);
 	}
 }
 

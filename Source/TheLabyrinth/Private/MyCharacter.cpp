@@ -359,6 +359,23 @@ void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* M
 		}
 
 		AnimInstance1->Montage_Play(MontageToPlay1);
+		if (CombatComponent && CombatComponent->EquippedWeapon)
+		{
+			AMyWeapon* CurrentWeapon = CombatComponent->EquippedWeapon;
+			if (CurrentWeapon)
+			{
+				/*if (IsLocallyControlled())
+				{
+					CurrentWeapon->Fire(CurrentWeapon->GetWeaponFPSMesh());
+				}
+				else
+				{
+					CurrentWeapon->Fire(CurrentWeapon->GetWeaponReplicatedMesh());
+				}*/
+
+				CurrentWeapon->Fire(CurrentWeapon->GetWeaponFPSMesh());
+			}
+		}
 		AnimInstance1->Montage_JumpToSection(SectionName, MontageToPlay1);
 	}
 	else if (!MontageToPlay1) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::PlayFireMontage - MontageToPlay1 is null.")); }
