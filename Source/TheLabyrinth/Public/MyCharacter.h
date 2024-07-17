@@ -119,7 +119,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Montages")
 	UAnimMontage* FPSFireAnimMontage{};
-	
 
 	/*
 		WIDGETS

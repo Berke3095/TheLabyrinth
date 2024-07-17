@@ -357,6 +357,9 @@ void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* M
 		case ECharacterState::ECS_EquippedRifle:
 			SectionName = FName("Fire_Rifle");
 			break;
+		case ECharacterState::ECS_EquippedShotgun:
+			SectionName = FName("Fire_Shotgun");
+			break;
 		default:
 			break;
 		}
