@@ -330,16 +330,13 @@ void AMyCharacter::FireWeapon()
 	if (CharacterState != ECharacterState::ECS_UnEquipped)
 	{
 		Server_FireWeapon();
-		PlayFireMontage(FPSAnimInstance, FPSFireAnimMontage);
+		if(IsLocallyControlled()) { PlayFireMontage(FPSAnimInstance, FPSFireAnimMontage); }
 	}
 }
 
 void AMyCharacter::Multicast_FireWeapon_Implementation()
 {
-	if (CharacterState != ECharacterState::ECS_UnEquipped)
-	{
-		PlayFireMontage(ReplicatedAnimInstance, ReplicatedFireAnimMontage);
-	}
+	PlayFireMontage(ReplicatedAnimInstance, ReplicatedFireAnimMontage);
 }
 
 void AMyCharacter::Server_FireWeapon_Implementation()
@@ -365,6 +362,8 @@ void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* M
 		}
 
 		AnimInstance1->Montage_Play(MontageToPlay1);
+		AnimInstance1->Montage_JumpToSection(SectionName, MontageToPlay1);
+
 		if (CombatComponent && CombatComponent->EquippedWeapon)
 		{
 			AMyWeapon* CurrentWeapon = CombatComponent->EquippedWeapon;
@@ -380,7 +379,6 @@ void AMyCharacter::PlayFireMontage(UAnimInstance* AnimInstance1, UAnimMontage* M
 				}
 			}
 		}
-		AnimInstance1->Montage_JumpToSection(SectionName, MontageToPlay1);
 	}
 	else if (!MontageToPlay1) { UE_LOG(LogTemp, Warning, TEXT("AMyCharacter::PlayFireMontage - MontageToPlay1 is null.")); }
 }

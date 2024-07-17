@@ -96,12 +96,9 @@ void AMyWeapon::Fire(USkeletalMeshComponent* WeaponMesh1)
 {
 	if (FireAnimation && WeaponMesh1)
 	{
-		if (FireAnimation && WeaponMesh1)
+		if (!WeaponMesh1->IsPlaying())
 		{
-			if (!WeaponMesh1->IsPlaying())
-			{
-				WeaponMesh1->PlayAnimation(FireAnimation, false);
-			}
+			WeaponMesh1->PlayAnimation(FireAnimation, false);
 		}
 	}
 }
